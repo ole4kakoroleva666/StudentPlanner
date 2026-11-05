@@ -1,0 +1,380 @@
+﻿@import './base.css';
+
+body {
+    background-color: #F5F6FF;
+}
+
+.title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-bottom: 6rem;
+}
+
+.title>img {
+    width: 5.3rem;
+    height: 5.3rem;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.title>p {
+    font-size: 3.6rem;
+    font-family: 'JostSemiBold';
+    color: #3C3E4C;
+}
+
+.all-card {
+    display: grid;
+    grid-template-columns: repeat(3, 39rem);
+    gap: 5.4rem;
+    justify-content: center;
+    margin: 0 auto;
+    padding-bottom: 13.3rem;
+}
+
+.day-card {
+    max-width: 39.1rem;
+    height: 39.7rem;
+    background-color: #FFFFFF;
+    box-shadow: 25px 25px 75px #E6E7F6;
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.day-header {
+    margin-bottom: 2rem;
+}
+
+.day-header h3 {
+    font-family: 'JostSemiBold';
+    font-size: 2.4rem;
+    color: #3C3E4C;
+    margin-bottom: 0.5rem;
+}
+
+.day-header .date {
+    font-family: "RobotoRegular";
+    font-size: 1.8rem;
+    color: #636AA3;
+}
+
+
+.day-lessons {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    flex-grow: 1;
+    overflow-y: scroll;
+    padding-right: 0.5rem;
+    max-height: 35rem;
+    position: relative;
+    
+    scrollbar-width: thin;
+    scrollbar-color: #636AA3 #f1f1f1;
+}
+
+.day-lessons::-webkit-scrollbar {
+    width: 0.6rem;
+    -webkit-appearance: initial;
+}
+
+.day-lessons::-webkit-scrollbar-track {
+    background: #E6E7F6;
+    border-radius: 0.8rem;
+    margin: 0.5rem 0;
+}
+
+.day-lessons::-webkit-scrollbar-thumb {
+    background: #636AA3;
+    border-radius: 0.8rem;
+}
+
+.day-lessons::-webkit-scrollbar-thumb:hover {
+    background: #4A508F;
+}
+
+.lesson {
+    background-color: #F9F9FF;
+    border-radius: 1rem;
+    padding: 1.5rem;
+}
+
+.time,
+.subject,
+.classroom,
+.teacher {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 0.8rem;
+    font-size: 1.6rem;
+    color: #3C3E4C;
+    font-family: "RobotoRegular";
+}
+
+.icons {
+    width: 1.7rem;
+    height: 1.7rem;
+    flex-shrink: 0;
+    margin-top: 0.3rem;
+}
+
+.time>p {
+    color: #636AA3;
+}
+
+@media (max-width: 1280px) {
+    .container {
+        padding: 0 3rem;
+    }
+
+    .title {
+        margin-bottom: 5rem;
+    }
+
+    .title>p {
+        font-size: 3.2rem;
+    }
+
+    .all-card {
+        grid-template-columns: repeat(2, 39rem);
+        gap: 4rem;
+        padding-bottom: 10rem;
+    }
+
+    .day-card {
+        max-width: 100%;
+        height: 38rem;
+    }
+
+    .day-header h3 {
+        font-size: 2.2rem;
+    }
+
+    .day-header .date {
+        font-size: 1.7rem;
+    }
+
+    .time,
+    .subject,
+    .classroom,
+    .teacher {
+        font-size: 1.5rem;
+    }
+    .day-lessons {
+        overflow-y: scroll;
+    }
+}
+
+@media (max-width: 1024px) {
+    .container {
+        padding: 0 2rem;
+    }
+
+    .title {
+        margin-bottom: 4rem;
+        margin-top: 2rem;
+        justify-content: flex-start;
+    }
+
+    .title>img {
+        position: relative;
+        left: auto;
+        top: auto;
+        transform: none;
+        margin-right: 2rem;
+        width: 4.5rem;
+        height: 4.5rem;
+    }
+
+    .title>p {
+        font-size: 2.8rem;
+        text-align: left;
+    }
+
+    .all-card {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 3rem;
+        padding-bottom: 8rem;
+    }
+
+    .day-card {
+        height: 36rem;
+        padding: 2rem;
+    }
+
+    .day-header {
+        margin-bottom: 1.5rem;
+    }
+
+    .day-header h3 {
+        font-size: 2rem;
+    }
+
+    .day-header .date {
+        font-size: 1.6rem;
+    }
+
+    .day-lessons {
+        max-height: 28rem;
+        gap: 1.2rem;
+        overflow-y: scroll;
+        padding-right: 1rem; 
+    }
+    .day-lessons::-webkit-scrollbar {
+        width: 0.8rem;
+        -webkit-appearance: initial;
+    }
+
+    .lesson {
+        padding: 1.2rem;
+    }
+
+    .time,
+    .subject,
+    .classroom,
+    .teacher {
+        font-size: 1.4rem;
+        margin-bottom: 0.6rem;
+        gap: 0.8rem;
+    }
+
+    .icons {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 0 1.5rem;
+    }
+
+    .title {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 3rem;
+        margin-top: 1rem;
+    }
+
+    .title>img {
+        margin-right: 0;
+        margin-bottom: 1rem;
+        width: 4rem;
+        height: 4rem;
+    }
+
+    .title>p {
+        font-size: 2.4rem;
+        text-align: left;
+        width: 100%;
+    }
+
+    .all-card {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        padding-bottom: 6rem;
+        max-width: 50rem;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .day-card {
+        height: auto;
+        min-height: 35rem;
+        max-width: 100%;
+        padding: 2rem;
+    }
+
+    .day-header h3 {
+        font-size: 1.8rem;
+    }
+
+    .day-header .date {
+        font-size: 1.5rem;
+    }
+
+    .day-lessons {
+        max-height: 30rem;
+        gap: 1rem;
+        overflow-y: scroll;
+    }
+
+    .lesson {
+        padding: 1.2rem;
+    }
+
+    .time,
+    .subject,
+    .classroom,
+    .teacher {
+        font-size: 1.4rem;
+        margin-bottom: 0.5rem;
+        gap: 0.8rem;
+        flex-wrap: wrap;
+    }
+
+    .subject p,
+    .teacher p {
+        word-break: break-word;
+    }
+
+    .icons {
+        width: 1.4rem;
+        height: 1.4rem;
+        margin-top: 0.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .title>p {
+        font-size: 2rem;
+    }
+
+    .all-card {
+        gap: 1.5rem;
+        padding-bottom: 5rem;
+    }
+
+    .day-card {
+        padding: 1.5rem;
+        min-height: 32rem;
+    }
+
+    .day-header h3 {
+        font-size: 1.6rem;
+    }
+
+    .day-header .date {
+        font-size: 1.4rem;
+    }
+
+    .day-lessons {
+        max-height: 25rem;
+        overflow-y: scroll;
+    }
+
+    .lesson {
+        padding: 1rem;
+    }
+
+    .time,
+    .subject,
+    .classroom,
+    .teacher {
+        font-size: 1.2rem;
+        gap: 0.6rem;
+    }
+
+    .icons {
+        width: 1.2rem;
+        height: 1.2rem;
+    }
+}

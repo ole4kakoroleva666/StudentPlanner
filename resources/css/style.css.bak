@@ -1,0 +1,708 @@
+html {
+  font-size: 62.5%;
+}
+
+body {
+  background-color: #F5F6FF;
+}
+
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+button,
+input {
+  outline: none;
+  border: none;
+}
+
+button:active,
+button:focus,
+button:focus-visible {
+  outline: none;
+  box-shadow: none;
+  border: none;
+  transform: none;
+}
+
+
+@font-face {
+  font-family: "RobotoRegular";
+  src: url("/fonts/Roboto/Roboto_Condensed-Regular.ttf");
+}
+
+@font-face {
+  font-family: "RobotoSemiBold";
+  src: url("/fonts/Roboto/Roboto-SemiBold.ttf");
+}
+
+@font-face {
+  font-family: "RobotoMedium";
+  src: url("/fonts/Roboto/static/Roboto-Medium.ttf");
+}
+
+@font-face {
+  font-family: "JostRegular";
+  src: url("/fonts/Jost/Jost-Regular.ttf");
+}
+
+@font-face {
+  font-family: "JostSemiBold";
+  src: url("/fonts/Jost/Jost-SemiBold.ttf");
+}
+
+@font-face {
+  font-family: "JostMedium";
+  src: url("/fonts/Jost/static/Jost-Medium.ttf");
+}
+
+
+h2 {
+  font-size: 3.2rem;
+  font-family: "JostSemiBold";
+  color: #3C3E4C;
+}
+
+a {
+  color: #64677E;
+  font-size: 2rem;
+}
+
+
+header {
+  background-color: #CFD3EB;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  height: 7.8rem;
+  font-family: "RobotoMedium";
+  margin-bottom: 5rem;
+}
+
+nav {
+  display: flex;
+  margin: 0 auto;
+  width: 128rem;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.logotip {
+  width: 10.6rem;
+  height: 4.6rem;
+}
+
+nav>img {
+  width: 3.2rem;
+  height: 3.2rem;
+}
+
+
+.container {
+  max-width: 123rem;
+  margin: 0 auto;
+}
+
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.card {
+  width: 60rem;
+  height: 51.5rem;
+  border-radius: 2rem;
+  box-shadow: 26px 25px 75px #E6E7F6;
+  margin-bottom: 8rem;
+  overflow: hidden;
+  background-color: #FFF;
+}
+
+.card-head {
+  background-color: #BEC4E3;
+  height: 7.3rem;
+  border-radius: 2rem 2rem 0 0;
+  padding-left: 5rem;
+  display: flex;
+  align-items: center;
+}
+
+.card-body {
+  background-color: #FFF;
+  padding: 3.2rem;
+  height: 45.5rem;
+}
+
+
+.card-body-input {
+  display: flex;
+  justify-content: space-between;
+  gap: 3.2rem;
+  margin-bottom: 3.2rem;
+}
+
+.card-body-input>input {
+  font-size: 2.6rem;
+  border: 1px solid #3C3E4C;
+  border-radius: 1rem;
+  padding: 1.4rem 2rem;
+  width: 100%;
+}
+
+.card-body-input>button {
+  font-size: 2.6rem;
+  color: #FFF;
+  background-color: #636AA3;
+  border-radius: 1rem;
+  padding: 1rem 2rem;
+  cursor: pointer;
+}
+
+.card-body-input>button:hover {
+  background-color: #8B8FAC;
+}
+
+.card-body-input>button:active {
+  background-color: #3C3E4C;
+  transform: scale(1);      /*для клика*/
+}
+
+
+.card-body-tasks {
+  display: flex;
+  flex-direction: column;
+  gap: 4.3rem;
+  font-size: 2.6rem;
+  color: #3C3E4C;
+  font-family: "RobotoRegular";
+}
+
+.card-body-tasks-task {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.card-body-tasks-task>input {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 3.2rem;
+  height: 3.2rem;
+  border: 0.1rem solid #3C3E4C;
+  border-radius: 25%;
+  cursor: pointer;
+  position: relative;
+}
+
+.card-body-tasks-task>input:checked {
+  background-color: #3C3E4C;
+  border-color: #3C3E4C;
+}
+
+.card-body-tasks-task>input:checked::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 1.2rem;
+  height: 0.6rem;
+  border-left: 0.3rem solid #FFF;
+  border-bottom: 0.3rem solid #FFF;
+  transform: translate(-50%, -60%) rotate(-45deg);
+}
+
+.card-body-tasks-task>input:checked+label {
+  text-decoration: line-through;
+  color: #9AA0C3;
+}
+
+.card-body-calendar {
+  padding: 3.2rem;
+}
+
+.card-body-calendar-month {
+  font-family: "RobotoMedium";
+  font-size: 2.4rem;
+  color: #3C3E4C;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 3.2rem;
+}
+
+.calendar {
+  padding-bottom: 2rem;
+}
+
+.card-calendar-week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1rem;
+  font-family: "RobotoRegular";
+  font-size: 1.8rem;
+  color: #3C3E4C;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.card-calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1rem;
+  font-family: "RobotoRegular";
+  font-size: 2.4rem;
+}
+
+.card-calendar-days>.day {
+  text-align: center;
+  min-height: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s;
+}
+
+.card-calendar-days>.day {
+  color: #3C3E4C;
+}
+
+.card-calendar-days>.day-next {
+  color: #A8A9E3;
+  opacity: 0.7;
+}
+
+.card-calendar-week>.week {
+  text-align: center;
+  min-height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-calendar-days>.day:hover,
+.card-calendar-days>.day-next:hover {
+  background-color: #f0f0f0;
+  cursor: pointer;
+}
+
+.card-calendar-days>.day:nth-child(23) {
+  background-color: #636AA3;
+  color: white;
+  border-radius: 2rem;
+}
+
+
+
+.card-body-shedule {
+  position: relative;
+}
+
+.sheduleheader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 3.2rem;
+  align-items: center;
+}
+
+.sheduleheader>a {
+  background-color: #636AA3;
+  font-family: "RobotoRegular";
+  color: #FFF;
+  font-size: 1.6rem;
+  border-radius: 1rem;
+  padding: 1.6rem;
+  cursor: pointer;
+}
+
+.sheduleheader>a:hover {
+  background-color: #8B8FAC;
+}
+
+.sheduleheader>a:active {
+  background-color: #3C3E4C;
+  transform: scale(1);      /*для клика*/
+}
+
+.data {
+  font-family: "RobotoMedium";
+  font-size: 1.6rem;
+  color: #3C3E4C;
+  max-height: 2rem;
+}
+
+.time,
+.subject,
+.classroom,
+.teacher {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.6rem;
+  color: #3C3E4C;
+  font-family: "RobotoRegular";
+}
+
+.tme img,
+.subject img,
+.classroom img,
+.teacher img {
+  width: 1.7rem;
+  height: 1.7rem;
+}
+
+.shedule {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.shedules {
+  display: flex;
+  flex-direction: column;
+  gap: 3.2rem;
+
+  max-height: 30em;
+  overflow-y: auto;
+}
+
+.shedules::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 4rem;
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, #fff 100%);
+}
+
+.shedules {
+  scrollbar-width: thin;
+  scrollbar-color: #636AA3 #f1f1f1;
+  border-radius: 0.8rem;
+}
+
+
+.card-body-notes {
+  display: flex;
+  align-items: flex-start;
+  gap: 3.2rem;
+}
+
+.card-body-notes-note {
+  border: 1px solid #3C3E4C;
+  border-radius: 1rem;
+  padding: 1.6rem;
+  width: 25.2rem;
+}
+
+.title {
+  font-family: "RobotoRegular";
+  font-size: 2rem;
+  color: #3C3E4C;
+  margin-bottom: 1rem;
+}
+
+.main-text {
+  font-family: "RobotoRegular";
+  font-size: 1.4rem;
+  color: #3C3E4C;
+}
+
+
+.card-body-input-plus {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  font-size: 1.4rem;
+  font-family: "RobotoRegular";
+  color: #FFF;
+  background-color: #636AA3;
+  border-radius: 1rem;
+  padding: 1.6rem;
+  cursor: pointer;
+  margin-bottom: 3.2rem;
+}
+
+.card-body-input-plus:hover {
+  background-color: #8B8FAC;
+}
+
+.card-body-input-plus:active {
+  background-color: #3C3E4C;
+  transform: scale(1);      /*для клика*/
+}
+
+.card-body-input-plus p {
+  background-color: #636AA3;
+  font-size: 1.4rem;
+  color: #FFF;
+}
+
+.card-body-files {
+  display: flex;
+  gap: 1.6rem;
+  flex-wrap: wrap;
+}
+
+.onefile {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  background-color: #DFE1F1;
+  border-radius: 1rem;
+  padding: 1.6rem;
+}
+
+.onefile>p {
+  font-size: 1.4rem;
+  font-family: "RobotoRegular";
+  color: #3C3E4C;
+}
+
+.icons {
+  max-width: 1.6rem;
+  max-height: 1.6rem;
+}
+
+footer {
+  max-width: 100%;
+  background: #BEC4E3;
+  color: #3C3E4C;
+  padding: 4rem 0 2rem;
+  font-family: "RobotoRegular";
+}
+
+.footer-container {
+  margin: 0 auto;
+  padding: 0 2rem;
+
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 3rem;
+}
+
+.footer-left .footer-logo {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+.footer-left .footer-desc {
+  max-width: 28rem;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.footer-info,
+.footer-contact {
+  max-width: 26rem;
+}
+
+.footer-info h4,
+.footer-contact h4,
+.footer-social h4 {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+.footer-social {
+  margin-top: 1rem;
+}
+
+.social-icons {
+  display: flex;
+  gap: 10px;
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 2.5rem;
+  font-size: 1rem;
+}
+
+@media (max-width: 1280px) {
+  html {
+    font-size: 60%; 
+  }
+
+  .container {
+    max-width: 95%;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  nav {
+    gap: 2rem;
+  }
+
+  .cards {
+    justify-content: center;
+    gap: 3rem;
+  }
+
+  .card {
+    width: 48rem;
+  }
+}
+
+@media (max-width: 1100px) {
+  html {
+    font-size: 55%;
+  }
+
+  nav {
+    gap: 1.5rem;
+  }
+
+  .card {
+    width: 45rem;
+  }
+}
+
+@media (max-width: 900px) {
+  html {
+    font-size: 50%;
+  }
+
+  nav {
+    justify-content: space-around;
+    padding: 0 2rem;
+  }
+
+  nav a {
+    display: none;
+  }
+
+  nav::after {
+    content: "";
+    background-image: url("../media/stash_burger-classic.svg"); 
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 3.2rem;
+    height: 3.2rem;
+    cursor: pointer;
+  }
+
+  .card {
+    width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  html {
+    font-size: 45%;
+  }
+
+  .card {
+    width: 100%;
+    height: auto;
+  }
+
+  .card-body {
+    height: auto;
+  }
+
+  .card-body-input {
+    flex-direction: column;
+    gap: 1.6rem;
+  }
+
+  .card-body-input > input,
+  .card-body-input > button {
+    font-size: 2rem;
+    padding: 1.2rem;
+  }
+
+  h2 {
+    font-size: 2.4rem;
+  }
+}
+
+@media (max-width: 480px) {
+  html {
+    font-size: 40%;
+  }
+
+  header {
+    height: 6.5rem;
+  }
+
+  .logotip {
+    width: 8rem;
+  }
+
+  .card-body-calendar-month {
+    font-size: 2rem;
+  }
+
+  .card-calendar-week {
+    font-size: 1.4rem;
+  }
+
+  .card-calendar-days {
+    font-size: 1.6rem;
+  }
+
+  .sheduleheader {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .card-body-notes {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .card-body-notes-note {
+    width: 100%;
+  }
+
+  footer {
+    padding: 2rem 0;
+  }
+
+  .footer-container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}
+
+@media (max-width: 360px) {
+  html {
+    font-size: 38%;
+  }
+
+  nav::after {
+    width: 2.8rem;
+    height: 2.8rem;
+  }
+
+  .logotip {
+    width: 7rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+  }
+
+  .card {
+    border-radius: 1.2rem;
+  }
+
+  .card-head {
+    height: 5rem;
+    padding-left: 2rem;
+  }
+
+  .card-body {
+    padding: 2rem;
+  }
+}

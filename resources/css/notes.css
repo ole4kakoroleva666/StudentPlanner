@@ -1,0 +1,289 @@
+﻿@import './base.css';
+
+body{
+    background-color: #F5F6FF;
+}
+
+.title {
+    display: flex;
+    align-items: center;
+    position: relative;
+    margin-bottom: 3rem;
+}
+
+.title>img {
+    width: 5.3rem;
+    height: 5.3rem;
+    margin-right: 2rem;
+}
+
+.title>p {
+    font-size: 3.6rem;
+    font-family: 'JostSemiBold';
+    color: #3C3E4C;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: max-content;
+    margin: 0;
+}
+
+
+.notes-input {
+    background-color: #FFF;
+    box-shadow: 15px 25px 50px #E6E7F6;
+    border-radius: 2rem;
+    padding: 0.7rem 0.9rem 0.7rem 0.9rem;
+    width: 127.1rem;
+    height: 7rem;
+    margin-bottom: 7.6rem;
+}
+
+.notes-input>input {
+    font-family: "RobotoMedium";
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    margin: 2.8rem;
+
+}
+
+.notes {
+    display: flex;
+    margin-bottom: 4.55rem;
+}
+
+.notes-user>p {
+    font-family: "RobotoMedium";
+    font-size: 2rem;
+    color: #3C3E4C;
+    margin-bottom: 3.5rem;
+}
+
+.one-notes {
+    background-color: #FFF;
+    box-shadow: 15px 15px 50px #E6E7F6;
+    width: 27.1rem;
+    height: 11.7rem;
+    border-radius: 1rem;
+    padding: 0.7rem 0.9rem 0.7rem 0.9rem;
+    display: flex;
+    flex-direction: column;
+    margin-right: 6.2rem;
+}
+
+.one-notes>p {
+    font-size: 1.6rem;
+    color: #3C3E4C;
+    font-family: "RobotoMedium";
+
+}
+
+.name {
+    display: flex;
+    align-items: center;
+    margin-bottom: 3.5rem;
+    gap: 4.8rem;
+}
+
+.name>p {
+    font-family: "RobotoMedium";
+    font-size: 2rem;
+    color: #3C3E4C;
+}
+
+.name>img {
+    width: 2.4rem;
+    height: 2.4rem;
+}
+
+
+@media (max-width: 1280px) {
+    html {
+        font-size: 60%;
+    }
+    
+    .container {
+        padding: 0 3rem;
+    }
+    
+    .title > img {
+        width: 5rem;
+        height: 5rem;
+    }
+    
+    .notes-input {
+        width: 100%;
+        max-width: 100rem;
+        height: 6rem;
+        margin-bottom: 6rem;
+    }
+    
+    .notes {
+        flex-wrap: wrap;
+        gap: 3rem;
+    }
+    
+    .one-notes {
+        width: 30rem;
+        margin-right: 0;
+    }
+}
+
+@media (max-width: 1024px) {
+    html {
+        font-size: 55%; 
+    }
+    
+    .title {
+        justify-content: flex-start;
+    }
+    
+    .title > img {
+        width: 4.5rem;
+        height: 4.5rem;
+    }
+    
+    .title > p {
+        font-size: 3rem;
+    }
+
+    .notes-input {
+        max-width: 80rem;
+        height: 5.5rem;
+        margin-bottom: 5rem;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .notes-user > p {
+        text-align: center;
+    }
+    
+    .notes {
+        justify-content: flex-start;
+        gap: 2.5rem;
+    }
+    
+    .one-notes {
+        width: 28rem;
+        height: 11rem;
+        padding: 1.5rem;
+    }
+    
+    .name {
+        gap: 3rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 0 1.5rem;
+    }
+    
+    .title {
+        flex-direction: row;
+        align-items: center;
+        margin-bottom: 3rem;
+        justify-content: flex-start;
+    }
+    
+    .title > img {
+        margin-right: 1.5rem;
+        margin-bottom: 0;
+        width: 4rem;
+        height: 4rem;
+    }
+    
+    .title > p {
+        position: static;
+        transform: none;
+        left: auto;
+        font-size: 2.5rem;
+        width: auto;
+        text-align: center;
+        flex: 1;
+    }
+    
+    .notes-input {
+        width: 100%;
+        height: 5rem;
+        margin-bottom: 4rem;
+        padding: 0 1.5rem;
+    }
+    
+    .notes-input > input {
+        max-width: 35rem;
+    }
+    
+    .notes-user > p {
+        text-align: left;
+    }
+    
+    .notes {
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+    }
+    
+    .one-notes {
+        width: 100%;
+        max-width: 40rem;
+        height: auto;
+        min-height: 10rem;
+        margin-right: 0;
+        padding: 1.5rem;
+    }
+    
+    .name {
+        justify-content: space-between;
+        gap: 1rem;
+    }
+    
+    .name > p {
+        flex: 1;
+    }
+    
+    .name > img {
+        width: 2rem;
+        height: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .title {
+        justify-content: flex-start;
+    }
+    
+    .title > img {
+        width: 3.5rem;
+        height: 3.5rem;
+        margin-right: 1rem;
+    }
+    
+    .title > p {
+        font-size: 2rem;
+    }
+    
+    .notes-input {
+        height: 4.5rem;
+        margin-bottom: 3rem;
+        padding: 0 1rem;
+        max-width: 35rem;
+    }
+    
+    .notes-input>input {
+        max-width: 35rem;
+    }
+
+    .one-notes {
+        padding: 1.2rem;
+        min-height: 9rem;
+        max-width: 30rem;
+    }
+    
+    .name > img {
+        width: 1.8rem;
+        height: 1.8rem;
+    }
+}

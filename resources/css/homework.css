@@ -1,0 +1,371 @@
+﻿@import './base.css';
+
+body {
+    background-color: #F5F6FF;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-bottom: 6rem;
+}
+
+.title>img {
+    width: 5.3rem;
+    height: 5.3rem;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.title>p {
+    font-size: 3.6rem;
+    font-family: 'JostSemiBold';
+    color: #3C3E4C;
+}
+
+.create-my-homework {
+    margin-top: 4rem;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    gap: 4rem;
+}
+
+button {
+    font-size: 2.4rem;
+    font-family: "RobotoRegular";
+    color: #FFF;
+    background-color: #636AA3;
+    border-radius: 1rem;
+    padding: 1.6rem 12.6rem;
+    cursor: pointer;
+}
+
+.create-my-homework>p {
+    font-size: 2.4rem;
+    font-family: "RobotoRegular";
+    color: #3C3E4C;
+}
+
+.my-homework {
+    margin-bottom: 16rem;
+    margin-top: 3rem;
+}
+
+.one-homework {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    position: relative;
+    padding-bottom: 1.4rem;
+}
+
+.homework-name {
+    font-family: "RobotoRegular";
+    font-size: 2rem;
+    color: #3C3E4C;
+}
+
+.homework-text {
+    font-family: "RobotoRegular";
+    font-size: 2rem;
+    color: #3C3E4C;
+}
+
+.homework-deadline {
+    font-family: "RobotoRegular";
+    font-size: 2rem;
+    color: #3C3E4C;
+}
+
+.homework-buttons {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin-top: 1.3rem;
+}
+
+.homework-edit,
+.homework-download,
+.homework-delete {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    width: 3.5rem;
+    height: 3.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.homework-download:hover,
+.homework-delete:hover {
+    opacity: 0.7;
+}
+
+.homework-download img,
+.homework-delete img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.homework-line {
+    height: 0.1rem;
+    background-color: #3C3E4C;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.upload-file {
+    margin-top: 21.6rem;
+    margin-bottom: 11.7rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    justify-content: flex-end;
+}
+
+
+.upload-file-text {
+    font-family: "RobotoRegular";
+    font-size: 2rem;
+    color: #3C3E4C;
+}
+
+@media (max-width: 1280px) {
+    html {
+        font-size: 60%;
+    }
+
+    .create-my-homework {
+        margin-top: 8rem;
+        gap: 5rem;
+    }
+
+    .create-my-homework button {
+        font-size: 2.2rem;
+        padding: 1.4rem 10rem;
+    }
+
+    .create-my-homework>p {
+        font-size: 2.2rem;
+    }
+
+    .my-homework {
+        margin-top: 5rem;
+        margin-bottom: 12rem;
+    }
+
+    .homework-name,
+    .homework-text,
+    .homework-deadline {
+        font-size: 1.8rem;
+    }
+}
+
+
+@media  (max-width: 1024px) {
+    html {
+        font-size: 58%;
+    }
+
+    .create-my-homework {
+        margin-top: 6rem;
+        gap: 4rem;
+    }
+
+    .create-my-homework button {
+        font-size: 2rem;
+        padding: 1.2rem 8rem;
+    }
+
+    .create-my-homework>p {
+        font-size: 2rem;
+    }
+
+    .my-homework {
+        margin-top: 4rem;
+        margin-bottom: 10rem;
+    }
+
+    .one-homework {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.5rem;
+        padding-bottom: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .homework-name,
+    .homework-text,
+    .homework-deadline {
+        font-size: 1.8rem;
+        min-width: auto;
+        text-align: left;
+        width: 100%;
+    }
+
+    .homework-deadline {
+        text-align: left;
+        color: #636AA3;
+        font-weight: bold;
+    }
+
+    .homework-buttons {
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+
+    .upload-file {
+        margin-top: 15rem;
+        margin-bottom: 8rem;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .create-my-homework {
+        margin-top: 4rem;
+        gap: 3rem;
+    }
+
+    .create-my-homework button {
+        font-size: 1.8rem;
+        padding: 1rem 4rem;
+        width: 100%;
+        max-width: 30rem;
+    }
+
+    .create-my-homework>p {
+        font-size: 1.8rem;
+        text-align: center;
+        width: 100%;
+    }
+
+    .my-homework {
+        margin-top: 3rem;
+        margin-bottom: 8rem;
+    }
+
+    .one-homework {
+        padding: 2rem;
+        background-color: #FFF;
+        border-radius: 1rem;
+        box-shadow: 0 0.2rem 1rem rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+        position: relative;
+    }
+
+    .homework-name {
+        font-size: 1.8rem;
+        font-family: 'RobotoMedium';
+        color: #636AA3;
+        order: 1;
+    }
+
+    .homework-text {
+        font-size: 1.6rem;
+        order: 3;
+        margin-top: 1rem;
+        min-width: auto;
+    }
+
+    .homework-deadline {
+        font-size: 1.6rem;
+        order: 2;
+        color: #3C3E4C;
+        margin-top: 0.5rem;
+    }
+
+    .homework-buttons {
+        position: absolute;
+        right: 1rem;
+        top: 1rem;
+        gap: 0.5rem;
+    }
+
+    .homework-fiels-download,
+    .homework-fiels-delete {
+        width: 3rem;
+        height: 3rem;
+    }
+
+    .homework-line {
+        display: none;
+    }
+
+    .upload-file {
+        margin-top: 10rem;
+        margin-bottom: 6rem;
+        justify-content: center;
+    }
+
+    .upload-file-text {
+        font-size: 1.6rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .title>img {
+        width: 3.5rem;
+        height: 3.5rem;
+    }
+
+    .title p {
+        font-size: 2rem;
+    }
+
+    .create-my-homework button {
+        font-size: 1.6rem;
+        padding: 0.8rem 3rem;
+    }
+
+    .create-my-homework>p {
+        font-size: 1.6rem;
+    }
+
+    .one-homework {
+        padding: 1.5rem;
+    }
+
+    .homework-name {
+        font-size: 1.6rem;
+        max-width: 70%;
+    }
+
+    .homework-text {
+        font-size: 1.4rem;
+    }
+
+    .homework-deadline {
+        font-size: 1.4rem;
+    }
+
+    .homework-buttons {
+        right: 2rem;
+        top: 0.5rem;
+        gap: 1.5rem;
+    }
+
+    .homework-fiels-download,
+    .homework-fiels-delete {
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+}

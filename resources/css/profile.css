@@ -1,0 +1,226 @@
+﻿@import './base.css';
+
+body {
+    background-color: #F5F6FF;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.title>img {
+    width: 5.3rem;
+    height: 5.3rem;
+    position: absolute;
+    inset-block-start: 14.8rem;
+    inset-inline-start: 28.8rem;
+}
+
+.title>p {
+    font-size: 3.6rem;
+    font-family: 'JostSemiBold';
+    color: #3C3E4C;
+    margin-bottom: 9.4rem;
+}
+
+.field {
+    margin-bottom: 3rem;
+}
+
+.field-header {
+    display: flex;
+    justify-content: space-between;
+    max-width: 76.4rem;
+    align-items: baseline;
+    margin-bottom: 1rem;
+}
+
+.field-name {
+    font-family: "RobotoRegular";
+    font-size: 2.4rem;
+    color: #3C3E4C;
+}
+
+.field-edit {
+    font-family: "RobotoRegular";
+    font-size: 2rem;
+    color: #3C3E4C;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.field-line {
+    height: 0.1rem;
+    background-color: #3C3E4C;
+    width: 76.4rem;
+    margin-bottom: 7.2rem;
+}
+
+.information-profile {
+    display: flex;
+    gap: 20rem;
+}
+
+button {
+    font-size: 2.6rem;
+    color: #3C3E4C;
+    font-family: "RobotoRegular";
+    background-color: #ffffff;
+    border-radius: 1rem;
+    padding: 0.5rem 2.1rem;
+    cursor: pointer;
+}
+
+.exit {
+    font-size: 2.6rem;
+    color: #FFF;
+    font-family: "RobotoRegular";
+    background-color: #636AA3;
+    border-radius: 1rem;
+    padding: 0.5rem 2.1rem;
+    cursor: pointer;
+    margin-bottom: 10.2rem;
+}
+
+.profile-right {
+    width: 30rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-card {
+    background-color: #fff;
+    box-shadow: 15px 25px 50px #E6E7F6;
+    border-radius: 2rem;
+    padding: 6.3rem 5.3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 29.7rem;
+}
+
+.profile-card>img {
+    width: 19.2rem;
+    height: 17.1rem;
+    object-fit: contain;
+}
+
+.profile-nickname {
+    font-family: "RobotoRegular";
+    font-size: 2.4rem;
+    color: #3C3E4C;
+    margin-top: 1.5rem;
+    text-align: center;
+}
+
+@media (max-width: 1280px) {
+    html {
+        font-size: 60%;
+    }
+
+    .information-profile {
+        gap: 10rem;
+    }
+}
+
+@media (max-width: 1024px) {
+    html {
+        font-size: 58%;
+    }
+
+    .information-profile {
+        gap: 22rem;
+    }
+
+    .field-header,
+    .field-line {
+        max-width: 100%;
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    html {
+        font-size: 56%;
+    }
+
+    .title>img {
+        width: 4rem;
+        height: 4rem;
+        inset-block-start: 12rem;
+        inset-inline-start: 2rem;
+    }
+
+    .title>p {
+        margin-bottom: 6rem;
+    }
+
+    .information-profile {
+        flex-direction: column-reverse;
+        gap: 5rem;
+        align-items: center;
+    }
+
+    .profile-right {
+        width: 100%;
+        align-items: center;
+    }
+
+    .profile-card {
+        width: 100%;
+        max-width: 32rem;
+    }
+
+    .profile-fields {
+        width: 100%;
+    }
+
+    .field-header {
+        align-items: center;
+    }
+
+    .field-name {
+        font-size: 2.2rem;
+    }
+
+    .field-edit {
+        font-size: 1.8rem;
+    }
+
+    .exit {
+        display: block;
+        margin: 6rem auto 8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    html {
+        font-size: 54%;
+    }
+
+    .title>p {
+        font-size: 2.8rem;
+        text-align: center;
+    }
+
+    .profile-card {
+        padding: 4rem 3rem;
+        height: auto;
+    }
+
+    .profile-card>img {
+        width: 15rem;
+        height: auto;
+    }
+}

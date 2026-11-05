@@ -1,0 +1,14 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g clip-path="url(#clip0_156_480)">
+<path d="M16 0H0V16H16V0Z" fill="url(#pattern0_156_480)"/>
+</g>
+<defs>
+<pattern id="pattern0_156_480" patternContentUnits="objectBoundingBox" width="1" height="1">
+<use xlink:href="#image0_156_480" transform="scale(0.0625)"/>
+</pattern>
+<clipPath id="clip0_156_480">
+<rect width="16" height="16" fill="white"/>
+</clipPath>
+<image id="image0_156_480" width="16" height="16" preserveAspectRatio="none" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAa0lEQVR4AWOAAamSl/VSxS/+48RFL+sZ8AF8mhPnv4cbQpYBx+78/N+78zPcELIMAAIUQ8gxAMUQyaIXBUQbULfh0/+Vp77BsWvv2/+SxS/2YxhAAsZhwKgBowaUPG8g3oCX7yWLnwaA9AEAaontjwxMAIoAAAAASUVORK5CYII="/>
+</defs>
+</svg>

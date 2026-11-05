@@ -1,0 +1,657 @@
+﻿@import './base.css';
+
+body {
+    background-color: #F5F6FF;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.container {
+    max-width: 128rem;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-bottom: 3rem;
+}
+
+.title>img {
+    width: 5.3rem;
+    height: 5.3rem;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+
+.week-mont {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-bottom: 2em;
+}
+
+.month {
+    font-size: 6.4rem;
+    font-family: "RobotoSemiBold";
+    color: #3C3E4C;
+}
+
+.week {
+    font-size: 3.2rem;
+    font-family: "RobotoRegular";
+    color: #3C3E4C;
+}
+
+
+.main-calendarOneDay {
+    display: flex;
+    gap: 5rem;
+    justify-content: space-between;
+    margin-bottom: 10rem;
+}
+
+.shedule-calendarOneDay {
+    background-color: #FFF;
+    border-radius: 2rem;
+    padding: 3rem;
+    box-shadow: 26px 25px 75px rgba(0, 0, 0, 0.1);
+    flex: 2;
+    max-width: 60rem;
+}
+
+.right-column {
+    flex: 1;
+    max-width: 50rem;
+    display: flex;
+    flex-direction: column;
+    gap: 5rem;
+}
+
+.shedule-header {
+    display: flex;
+    align-items: center;
+    gap: 2.8rem;
+    margin-bottom: 3rem;
+}
+
+.shedule-header>p {
+    font-size: 3.2rem;
+    font-family: "RobotoRegular";
+    color: #3C3E4C;
+}
+
+.shedule-header>img {
+    width: 3.8rem;
+    height: 3.8rem;
+}
+
+.onelesson {
+    margin-bottom: 4rem;
+}
+
+.onelesson:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.day-header {
+    display: flex;
+    align-items: center;
+    gap: 8rem;
+    margin-bottom: 2rem;
+}
+
+.day-header h3 {
+    font-family: 'JostSemiBold';
+    font-size: 2.4rem;
+    color: #3C3E4C;
+}
+
+.day-header .date {
+    font-family: "RobotoRegular";
+    font-size: 1.8rem;
+    color: #636AA3;
+}
+
+.time,
+.subject,
+.classroom,
+.teacher {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    font-size: 1.6rem;
+    color: #3C3E4C;
+    font-family: "RobotoRegular";
+    margin-bottom: 1rem;
+}
+
+.time:last-child,
+.subject:last-child,
+.classroom:last-child,
+.teacher:last-child {
+    margin-bottom: 0;
+}
+
+.time img,
+.subject img,
+.classroom img,
+.teacher img {
+    width: 1.7rem;
+    height: 1.7rem;
+}
+
+.homeworkblock {
+    background-color: #FFF;
+    border-radius: 2rem;
+    padding: 3rem;
+    box-shadow: 26px 25px 75px rgba(0, 0, 0, 0.1);
+}
+
+.homework-header {
+    display: flex;
+    align-items: center;
+    gap: 2.8rem;
+    margin-bottom: 3rem;
+}
+
+.homework-header>p {
+    font-size: 3.2rem;
+    font-family: "RobotoRegular";
+    color: #3C3E4C;
+}
+
+.homework-header>img {
+    width: 3.8rem;
+    height: 3.8rem;
+}
+
+.homework-tasks {
+    margin-bottom: 3rem;
+}
+
+.homework-task {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    font-family: "RobotoRegular";
+    font-size: 1.8rem;
+    color: #3C3E4C;
+}
+
+.homework-task:last-child {
+    margin-bottom: 0;
+}
+
+
+.homework-task>input {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 3.2rem;
+    height: 3.2rem;
+    border: 0.1rem solid #3C3E4C;
+    border-radius: 25%;
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.homework-task>input:checked {
+    background-color: #636AA3;
+    border-color: #636AA3;
+}
+
+
+.homework-task>input:checked::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 1.2rem;
+    height: 0.6rem;
+    border-left: 0.3rem solid #FFF;
+    border-bottom: 0.3rem solid #FFF;
+    transform: translate(-50%, -60%) rotate(-45deg);
+}
+
+.homework-task>input:checked+label {
+    text-decoration: line-through;
+    color: #9AA0C3;
+}
+
+.add-homework-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    width: 100%;
+    padding: 1.5rem;
+    background-color: #636AA3;
+    color: #FFF;
+    border: none;
+    border-radius: 1rem;
+    font-family: "RobotoRegular";
+    font-size: 1.6rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+
+.add-homework-btn img {
+    width: 2rem;
+    height: 2rem;
+}
+
+.notesblock {
+    background-color: #FFF;
+    border-radius: 2rem;
+    padding: 3rem;
+    box-shadow: 26px 25px 75px rgba(0, 0, 0, 0.1);
+}
+
+.notes-header {
+    display: flex;
+    align-items: center;
+    gap: 2.8rem;
+    margin-bottom: 3rem;
+}
+
+.notes-header>p {
+    font-size: 3.2rem;
+    font-family: "RobotoRegular";
+    color: #3C3E4C;
+}
+
+.notes-header>img {
+    width: 3.8rem;
+    height: 3.8rem;
+}
+
+.notes-list {
+    margin-bottom: 3rem;
+}
+
+.note-task {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    font-family: "RobotoRegular";
+    font-size: 1.8rem;
+    color: #3C3E4C;
+}
+
+.note-task:last-child {
+    margin-bottom: 0;
+}
+
+.note-task>input {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 3.2rem;
+    height: 3.2rem;
+    border: 0.1rem solid #3C3E4C;
+    border-radius: 25%;
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.note-task>input:checked {
+    background-color: #636AA3;
+    border-color: #636AA3;
+}
+
+.note-task>input:checked::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 1.2rem;
+    height: 0.6rem;
+    border-left: 0.3rem solid #FFF;
+    border-bottom: 0.3rem solid #FFF;
+    transform: translate(-50%, -60%) rotate(-45deg);
+}
+
+.note-task>input:checked+label {
+    text-decoration: line-through;
+    color: #9AA0C3;
+}
+
+.add-note-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    width: 100%;
+    padding: 1.5rem;
+    background-color: #636AA3;
+    color: #FFF;
+    border-radius: 1rem;
+    font-family: "RobotoRegular";
+    font-size: 1.6rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.add-note-btn:hover {
+    background-color: #4A508F;
+}
+
+.add-note-btn img {
+    width: 2rem;
+    height: 2rem;
+}
+
+
+@media (max-width: 1280px) {
+    .container {
+        max-width: 100rem;
+        padding: 0 3rem;
+    }
+
+    .month {
+        font-size: 5.5rem;
+    }
+
+    .week {
+        font-size: 2.8rem;
+    }
+
+    .main-calendarOneDay {
+        gap: 4rem;
+    }
+
+    .shedule-header>p,
+    .homework-header>p,
+    .notes-header>p {
+        font-size: 2.8rem;
+    }
+
+    .day-header h3 {
+        font-size: 2.2rem;
+    }
+}
+
+@media (max-width: 1024px) {
+    .container {
+        padding: 0 2rem;
+    }
+
+    .title {
+        margin-top: 2rem;
+    }
+
+    .week-mont {
+        align-items: flex-start;
+        margin-bottom: 3rem;
+    }
+
+    .month {
+        font-size: 4.8rem;
+    }
+
+    .week {
+        font-size: 2.4rem;
+    }
+
+    .main-calendarOneDay {
+        flex-direction: column;
+        gap: 3rem;
+    }
+
+    .shedule-calendarOneDay,
+    .right-column {
+        max-width: 100%;
+    }
+
+    .right-column {
+        gap: 3rem;
+    }
+
+    .shedule-header,
+    .homework-header,
+    .notes-header {
+        gap: 2rem;
+    }
+
+    .shedule-header>p,
+    .homework-header>p,
+    .notes-header>p {
+        font-size: 2.6rem;
+    }
+
+    .shedule-header>img,
+    .homework-header>img,
+    .notes-header>img {
+        width: 3.2rem;
+        height: 3.2rem;
+    }
+
+    .day-header {
+        gap: 4rem;
+    }
+
+    .day-header h3 {
+        font-size: 2rem;
+    }
+
+    .day-header .date {
+        font-size: 1.6rem;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .container {
+        padding: 0 1.5rem;
+    }
+
+    .title {
+        justify-content: flex-start;
+        margin-bottom: 2rem;
+        margin-top: 1rem;
+    }
+
+    .title>img {
+        position: relative;
+        left: auto;
+        top: auto;
+        transform: none;
+        width: 4rem;
+        height: 4rem;
+        margin-right: 1rem;
+    }
+
+    .week-mont {
+        align-items: center;
+        text-align: center;
+        margin-top: 3rem;
+        margin-bottom: 2rem;
+    }
+
+    .month {
+        font-size: 3.6rem;
+        text-align: center;
+    }
+
+    .week {
+        font-size: 2rem;
+        text-align: center;
+    }
+
+    .shedule-calendarOneDay,
+    .homeworkblock,
+    .notesblock {
+        padding: 2rem;
+        border-radius: 1.5rem;
+    }
+
+    .shedule-header,
+    .homework-header,
+    .notes-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .shedule-header>p,
+    .homework-header>p,
+    .notes-header>p {
+        font-size: 2.4rem;
+    }
+
+    .shedule-header>img,
+    .homework-header>img,
+    .notes-header>img {
+        width: 2.8rem;
+        height: 2.8rem;
+    }
+
+    .day-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .day-header h3 {
+        font-size: 1.8rem;
+    }
+
+    .day-header .date {
+        font-size: 1.4rem;
+    }
+
+    .time,
+    .subject,
+    .classroom,
+    .teacher {
+        font-size: 1.4rem;
+        gap: 1rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .time img,
+    .subject img,
+    .classroom img,
+    .teacher img {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+
+    .onelesson {
+        margin-bottom: 3rem;
+        padding-bottom: 3rem;
+    }
+
+    .homework-task,
+    .note-task {
+        font-size: 1.6rem;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .homework-task>input,
+    .note-task>input {
+        width: 2.8rem;
+        height: 2.8rem;
+    }
+
+    .add-homework-btn,
+    .add-note-btn {
+        padding: 1.2rem;
+        font-size: 1.4rem;
+    }
+
+    .add-homework-btn img,
+    .add-note-btn img {
+        width: 1.8rem;
+        height: 1.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0 1rem;
+    }
+
+    .title>img {
+        width: 3.5rem;
+        height: 3.5rem;
+    }
+
+    .month {
+        font-size: 3rem;
+    }
+
+    .week {
+        font-size: 1.8rem;
+    }
+
+    .shedule-calendarOneDay,
+    .homeworkblock,
+    .notesblock {
+        padding: 1.5rem;
+        border-radius: 1rem;
+    }
+
+    .shedule-header>p,
+    .homework-header>p,
+    .notes-header>p {
+        font-size: 2rem;
+    }
+
+    .day-header h3 {
+        font-size: 1.6rem;
+    }
+
+    .day-header .date {
+        font-size: 1.2rem;
+    }
+
+    .time,
+    .subject,
+    .classroom,
+    .teacher {
+        font-size: 1.2rem;
+        flex-wrap: wrap;
+    }
+
+
+    .homework-task,
+    .note-task {
+        font-size: 1.4rem;
+    }
+
+    .homework-task>input,
+    .note-task>input {
+        width: 2.4rem;
+        height: 2.4rem;
+    }
+
+    .add-homework-btn,
+    .add-note-btn {
+        font-size: 1.3rem;
+        padding: 1rem;
+    }
+
+    .main-calendarOneDay {
+        margin-bottom: 5rem;
+    }
+}

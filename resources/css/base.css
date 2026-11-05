@@ -1,0 +1,361 @@
+﻿/* ==========================================
+   ПЕРЕМЕННЫЕ ЦВЕТОВ И ТЕМАТИКИ
+   ========================================== */
+:root {
+    --bg-main: #F5F6FF;
+    --primary: #636AA3;
+    --primary-hover: #4f5691;
+    --text-dark: #3C3E4C;
+    --accent-purple: #BEC4E3;
+    --header-bg: #CFD3EB;
+    --text-muted: #9AA0C3;
+    --nav-link: #64677E;
+}
+
+html {
+    font-size: 62.5%; /* 1rem = 10px */
+}
+
+@media (min-width: 2560px) {
+    html {
+        font-size: 83.3%;
+    }
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-main);
+    font-family: "RobotoRegular", sans-serif;
+    color: var(--text-dark);
+}
+
+button,
+input {
+    outline: none;
+    border: none;
+}
+
+button:active,
+button:focus,
+button:focus-visible {
+    outline: none;
+    box-shadow: none;
+}
+
+/* ==========================================
+   ПОДКЛЮЧЕНИЕ ШРИФТОВ
+   ========================================== */
+@font-face {
+    font-family: "RobotoRegular";
+    src: url("../fonts/Roboto/static/Roboto-Regular.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "RobotoSemiBold";
+    src: url("../fonts/Roboto/static/Roboto-SemiBold.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "RobotoMedium";
+    src: url("../fonts/Roboto/static/Roboto-Medium.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "RobotoBold";
+    src: url("../fonts/Roboto/static/Roboto-Bold.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: 'JostRegular';
+    src: url("../fonts/Jost/Jost-Regular.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: 'JostSemiBold';
+    src: url("../fonts/Jost/Jost-SemiBold.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: 'JostMedium';
+    src: url("../fonts/Jost/static/Jost-Medium.ttf") format("truetype");
+}
+
+/* ==========================================
+   ОБЩИЕ СТИЛИ ТЕКСТА И ССЫЛОК
+   ========================================== */
+h2 {
+    font-size: 2.4rem;
+    font-family: 'JostSemiBold', sans-serif;
+    color: var(--text-dark);
+}
+
+a {
+    color: var(--nav-link);
+    font-size: 2rem;
+    text-decoration: none;
+}
+
+.container {
+    max-width: 120rem;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* ==========================================
+   ФИРМЕННЫЙ СКРОЛЛБАР
+   ========================================== */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 0.8rem;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 0.8rem;
+}
+
+/* ==========================================
+   ШАПКА И МЕНЮ НАВИГАЦИИ
+   ========================================== */
+header {
+    background-color: var(--header-bg);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    height: 7.4rem;
+    font-family: "RobotoMedium", sans-serif;
+    margin-bottom: 3.2rem;
+}
+
+nav {
+    display: flex;
+    margin: 0 auto;
+    width: 128rem;
+    justify-content: space-around;
+    align-items: center;
+}
+
+nav a {
+    text-decoration: none;
+    font-family: "RobotoMedium", sans-serif;
+    font-size: 2rem;
+    color: var(--nav-link);
+    transition: color 0.2s ease;
+}
+
+nav a:hover {
+    color: var(--text-dark);
+}
+
+nav a:first-child {
+    margin-left: 0;
+}
+
+nav>img,
+nav a>img {
+    width: 3.2rem;
+    height: 3.2rem;
+}
+
+.logotip {
+    width: 10.6rem;
+    height: 4.6rem;
+}
+
+/* ==========================================
+   ОБЩИЙ ЗАГОЛОВОК СТР. СО СТРЕЛКОЙ «НАЗАД»
+   ========================================== */
+.title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-bottom: 6rem;
+}
+
+.title a {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+}
+
+.title img {
+    width: 5.3rem;
+    height: 5.3rem;
+}
+
+.title>p {
+    font-size: 3.6rem;
+    font-family: 'JostSemiBold', sans-serif;
+    color: var(--text-dark);
+}
+
+/* ==========================================
+   ПОДВАЛ САЙТА (FOOTER)
+   ========================================== */
+footer {
+    max-width: 100%;
+    background: var(--accent-purple);
+    color: var(--text-dark);
+    padding: 4rem 0 2rem;
+    font-family: "RobotoRegular", sans-serif;
+}
+
+.footer-container {
+    margin: 0 auto;
+    max-width: 128rem;
+    padding: 0 2rem;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 3rem;
+}
+
+.footer-left .footer-logo {
+    width: 10.6rem;
+    height: 4.6rem;
+    margin-bottom: 0.5rem;
+}
+
+.footer-left .footer-desc {
+    max-width: 28rem;
+    font-size: 1.4rem;
+    line-height: 1.4;
+    margin-bottom: 0.5rem;
+    color: var(--text-dark);
+}
+
+.footer-info,
+.footer-contact {
+    max-width: 28rem;
+}
+
+.footer-info h4,
+.footer-contact h4,
+.footer-social h4 {
+    margin-bottom: 1rem;
+    font-size: 1.6rem;
+    font-family: "RobotoMedium", sans-serif;
+    color: var(--text-dark);
+}
+
+.footer-info p,
+.footer-contact p {
+    font-size: 1.4rem;
+    line-height: 1.4;
+    color: var(--text-dark);
+}
+
+.footer-social {
+    margin-top: 1.5rem;
+}
+
+.social-icons {
+    display: flex;
+    gap: 1.2rem;
+    margin-top: 0.8rem;
+}
+
+.social-icons img {
+    width: 2.8rem;
+    height: 2.8rem;
+    cursor: pointer;
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 3rem;
+    font-size: 1.4rem;
+    color: var(--text-dark);
+}
+
+/* ==========================================
+   АДАПТИВНОСТЬ ДЛЯ БАЗОВОГО КАРКАСА
+   ========================================== */
+@media (max-width: 1280px) {
+    html {
+        font-size: 60%;
+    }
+}
+
+@media (max-width: 1024px) {
+    html {
+        font-size: 58%;
+    }
+
+    header nav {
+        width: 100%;
+        padding: 0 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    html {
+        font-size: 56%;
+    }
+
+    header {
+        margin-bottom: 3rem;
+    }
+
+    header nav {
+        padding: 0 1.5rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .title {
+        margin-bottom: 4rem;
+    }
+
+    .title img {
+        width: 4rem;
+        height: 4rem;
+    }
+
+    .footer-container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .social-icons {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    html {
+        font-size: 54%;
+    }
+
+    header {
+        height: auto;
+        padding: 1.5rem 0;
+        margin-bottom: 2rem;
+    }
+
+    .title>p {
+        font-size: 2.8rem;
+        text-align: center;
+    }
+
+    .social-icons img {
+        width: 2.4rem;
+        height: 2.4rem;
+    }
+}

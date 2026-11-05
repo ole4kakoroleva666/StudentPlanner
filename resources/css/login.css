@@ -1,0 +1,315 @@
+﻿@import './base.css';
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #CFD3EB;
+}
+
+.container-login {
+    width: 100%;
+    max-width: 128rem;
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login > h1 {
+    font-family: "RobotoSemiBold";
+    font-size: 6.4rem;
+    color: #3C3E4C;
+    text-align: center;
+    margin-bottom: 5.3rem;
+}
+
+.login-input {
+    background-color: #F5F6FF;
+    border-radius: 1rem;
+    padding: 1.6rem 3.5rem;
+    width: 73.3rem;
+    min-height: 7.3rem;
+    height: auto;
+    margin-bottom: 3.5rem;
+    border: 0.2rem solid #F5F6FF;
+    transition: border-color 0.3s;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.login-input:hover,
+.login-input:focus-within {
+    border-color: #636AA3;
+}
+
+.login-input > input {
+    font-family: "RobotoRegular";
+    font-size: 2.4rem;
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #3C3E4C;
+}
+
+.login-input > input::placeholder {
+    color: #999;
+}
+
+.login-input.last-input {
+    margin-bottom: 1.5rem;
+}
+
+.login .login-forgot {
+    width: 100%;
+}
+
+.login .login-forgot > a {
+    font-family: "RobotoRegular";
+    font-size: 1.8rem;
+    color: #636AA3;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.login .login-forgot > a:hover {
+    text-decoration: underline;
+}
+
+.login-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+    margin-top: 5.3rem;
+}
+
+.login-btn:focus,
+.login-btn:focus-visible {
+    background-color: #636AA3;
+    color: white;
+    outline: none;
+    border: none;
+}
+
+.login-btn {
+    background-color: #636AA3;
+    color: white;
+    font-family: "RobotoMedium";
+    font-size: 2.4rem;
+    border: none;
+    border-radius: 1.5rem;
+    padding: 2rem 8rem;
+    cursor: pointer;
+    width: 100%;
+    max-width: 30rem;
+}
+
+.login-btn:hover {
+    background-color: #4f5691;
+}
+
+.login-btn:active {
+    background-color: #3C3E4C;
+    transform: scale(1);
+}
+
+.register-link {
+    font-family: "RobotoRegular";
+    font-size: 1.8rem;
+    color: #3C3E4C;
+    text-align: center;
+}
+
+.register-link > a {
+    color: #636AA3;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.register-link > a:hover {
+    text-decoration: underline;
+}
+
+/* Стили для сообщений об ошибках */
+.error-message {
+    color: #e74c3c;
+    font-family: "RobotoRegular";
+    font-size: 1.5rem;
+    display: block;
+    margin-top: 0.8rem;
+    line-height: 1.2;
+}
+
+.alert-error {
+    background-color: #fee;
+    border: 1px solid #e74c3c;
+    color: #e74c3c;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+@media (max-width: 1280px) {
+    html {
+        font-size: 60%;
+    }
+
+    .container-login {
+        max-width: 60rem;
+    }
+
+    .login > h1 {
+        font-size: 5.5rem;
+    }
+
+    .login-input {
+        width: 100%;
+    }
+
+    .login-input > input {
+        font-size: 2.2rem;
+    }
+
+    .login-btn {
+        font-size: 2.2rem;
+    }
+
+    .login-forgot a {
+        font-size: 1.6rem;
+    }
+}
+
+@media (max-width: 992px) {
+    html {
+        font-size: 55%;
+    }
+
+    .container-login {
+        max-width: 48rem;
+    }
+
+    .login > h1 {
+        font-size: 4.8rem;
+    }
+
+    .login-input {
+        width: 100%;
+        padding: 1.8rem 3rem;
+        height: 6.5rem;
+    }
+
+    .login-input > input {
+        font-size: 2.2rem;
+    }
+
+    .login-btn {
+        font-size: 2.2rem;
+    }
+
+    .login-forgot a {
+        font-size: 1.6rem;
+    }
+}
+
+@media (max-width: 768px) {
+    html {
+        font-size: 50%;
+    }
+
+    .container-login {
+        max-width: 90%;
+    }
+
+    .login > h1 {
+        font-size: 4.4rem;
+    }
+
+    .login-input {
+        padding: 1.8rem 3rem;
+        height: 6.5rem;
+    }
+
+    .login-input > input {
+        font-size: 2.2rem;
+    }
+
+    .login-btn {
+        padding: 1.6rem 4rem;
+        font-size: 2.2rem;
+    }
+
+    .login-forgot a {
+        font-size: 1.6rem;
+    }
+
+    .register-link {
+        font-size: 1.6rem;
+    }
+}
+
+@media (max-width: 480px) {
+    html {
+        font-size: 45%;
+    }
+
+    .login > h1 {
+        font-size: 3.6rem;
+        margin-bottom: 3rem;
+    }
+
+    .login-input {
+        padding: 1.5rem 2.5rem;
+        height: 6rem;
+        margin-bottom: 3rem;
+        width: 100%; 
+    }
+
+    .login-input > input {
+        font-size: 2rem;
+    }
+
+    .login-btn {
+        padding: 1.6rem 4rem;
+        font-size: 2rem;
+        max-width: 26rem;
+    }
+
+    .register-link {
+        font-size: 1.6rem;
+    }
+
+    .login-forgot a {
+        font-size: 1.4rem;
+    }
+}
+
+@media (max-width: 360px) {
+    html {
+        font-size: 40%;
+    }
+    .login > h1 {
+        font-size: 3rem;
+    }
+
+    .login-button {
+        max-width: 26rem;
+    }
+}
