@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 
 <head>
@@ -78,13 +78,20 @@
                     <!-- КАРТОЧКА 2: КАЛЕНДАРЬ -->
                     <div class="card">
                         <div class="card-head">
-                            <a href="/calendar" style="text-decoration: none; color: inherit;">
+                            <a href="/calendar">
                                 <h2>Календарь ➔</h2>
                             </a>
                         </div>
 
                         <div class="card-body-calendar">
-                            <div class="card-body-calendar-month">Сентябрь</div>
+                            <div class="card-body-calendar-header">
+                                <button type="button" class="calendar-btn" id="miniCalPrevBtn">‹</button>
+                                <div class="calendar-selects">
+                                    <select class="calendar-select" id="miniCalMonthSelect" aria-label="Выбор месяца"></select>
+                                    <select class="calendar-select" id="miniCalYearSelect" aria-label="Выбор года"></select>
+                                </div>
+                                <button type="button" class="calendar-btn" id="miniCalNextBtn">›</button>
+                            </div>
 
                             <div class="calendar">
                                 <div class="card-calendar-week">
@@ -97,44 +104,7 @@
                                     <div class="week">вс</div>
                                 </div>
 
-                                <div class="card-calendar-days" id="miniCalendarDays">
-                                    <div class="day">01</div>
-                                    <div class="day">02</div>
-                                    <div class="day">03</div>
-                                    <div class="day">04</div>
-                                    <div class="day">05</div>
-                                    <div class="day">06</div>
-                                    <div class="day">07</div>
-                                    <div class="day">08</div>
-                                    <div class="day">09</div>
-                                    <div class="day">10</div>
-                                    <div class="day">11</div>
-                                    <div class="day">12</div>
-                                    <div class="day">13</div>
-                                    <div class="day">14</div>
-                                    <div class="day">15</div>
-                                    <div class="day">16</div>
-                                    <div class="day">17</div>
-                                    <div class="day">18</div>
-                                    <div class="day">19</div>
-                                    <div class="day">20</div>
-                                    <div class="day">21</div>
-                                    <div class="day">22</div>
-                                    <div class="day">23</div>
-                                    <div class="day">24</div>
-                                    <div class="day">25</div>
-                                    <div class="day">26</div>
-                                    <div class="day">27</div>
-                                    <div class="day">28</div>
-                                    <div class="day">29</div>
-                                    <div class="day">30</div>
-
-                                    <div class="day day-next">01</div>
-                                    <div class="day day-next">02</div>
-                                    <div class="day day-next">03</div>
-                                    <div class="day day-next">04</div>
-                                    <div class="day day-next">05</div>
-                                </div>
+                                <div class="card-calendar-days" id="miniCalendarDays"></div>
                             </div>
                         </div>
                     </div>

@@ -1,4 +1,4 @@
-﻿document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function () {
 
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
@@ -189,21 +189,169 @@
 
 
     // ==========================================
-    // 5. БЛОК "КАЛЕНДАРЬ"
+    // 5. БЛОК "КАЛЕНДАРЬ" (С выбором месяца и года)
     // ==========================================
-    const daysElements = document.querySelectorAll('#miniCalendarDays .day');
-    daysElements.forEach(function (dayElem) {
-        dayElem.style.cursor = 'pointer';
-        dayElem.addEventListener('click', function () {
-            daysElements.forEach(d => {
-                d.style.background = 'transparent';
-                d.style.color = 'inherit';
-            });
-            dayElem.style.background = '#3874FF';
-            dayElem.style.color = '#fff';
-            dayElem.style.borderRadius = '6px';
+    const miniCalendarDays = document.querySelector('#miniCalendarDays');
+    const miniCalMonthSelect = document.querySelector('#miniCalMonthSelect');
+    const miniCalYearSelect = document.querySelector('#miniCalYearSelect');
+    const miniCalPrevBtn = document.querySelector('#miniCalPrevBtn');
+    const miniCalNextBtn = document.querySelector('#miniCalNextBtn');
+
+    if (miniCalendarDays && miniCalMonthSelect && miniCalYearSelect) {
+        const monthNames = [
+            'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
+            'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'
+        ];
+
+        let displayDate = new Date();
+
+        // Заполняем месяцы в <select>
+        monthNames.forEach(function (name, index) {
+            const option = document.createElement('option');
+            option.value = index;
+            option.textContent = name;
+            miniCalMonthSelect.appendChild(option);
         });
-    });
+
+        // Заполняем года в <select> с широким диапазоном (например, ±10 лет),
+        // чтобы появился удобный скролл ("листалка")
+        const currentYear = new Date().getFullYear();
+        const startYear = currentYear - 10;
+        const endYear = currentYear + 10;
+        for (let y = startYear; y <= endYear; y++) {
+            const option = document.createElement('option');
+            option.value = y;
+            option.textContent = y;
+            miniCalYearSelect.appendChild(option);
+        }
+
+        function renderMiniCalendar() {
+            const year = displayDate.getFullYear();
+            const month = displayDate.getMonth();
+
+            // Если пролистали дальше диапазона — добавляем год динамически
+            if (!miniCalYearSelect.querySelector(`option[value="${year}"]`)) {
+                const opt = document.createElement('option');
+                opt.value = year;
+                opt.textContent = year;
+                if (year < startYear) {
+                    miniCalYearSelect.prepend(opt);
+                } else {
+                    miniCalYearSelect.appendChild(opt);
+                }
+            }
+
+            // Синхронизируем значения в select
+            miniCalMonthSelect.value = month;
+            miniCalYearSelect.value = year;
+
+            miniCalendarDays.innerHTML = '';
+
+            const firstDayIndex = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const prevMonthLastDay = new Date(year, month, 0).getDate();
+
+            // Сдвиг для понедельника: вс (0) -> 6, пн (1) -> 0 и т.д.
+            const shift = (firstDayIndex === 0) ? 6 : firstDayIndex - 1;
+
+            const now = new Date();
+            const isCurrentMonth = (now.getFullYear() === year && now.getMonth() === month);
+            const todayDate = now.getDate();
+
+            // 1. Дни предыдущего месяца
+            for (let i = shift; i > 0; i--) {
+                const dayNum = prevMonthLastDay - i + 1;
+                const dayDiv = document.createElement('div');
+                dayDiv.className = 'day day-prev';
+                dayDiv.textContent = dayNum < 10 ? '0' + dayNum : dayNum;
+
+                const prevDate = new Date(year, month - 1, dayNum);
+                const pMonth = String(prevDate.getMonth() + 1).padStart(2, '0');
+                const pDay = String(dayNum).padStart(2, '0');
+                const pDateStr = `${prevDate.getFullYear()}-${pMonth}-${pDay}`;
+
+                dayDiv.style.cursor = 'pointer';
+                dayDiv.addEventListener('click', function () {
+                    window.location.href = `/calendarOneDay?date=${pDateStr}`;
+                });
+
+                miniCalendarDays.appendChild(dayDiv);
+            }
+
+            // 2. Дни текущего месяца
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayDiv = document.createElement('div');
+                dayDiv.className = 'day';
+                dayDiv.textContent = day < 10 ? '0' + day : day;
+
+                const formattedMonth = String(month + 1).padStart(2, '0');
+                const formattedDay = String(day).padStart(2, '0');
+                const fullDateStr = `${year}-${formattedMonth}-${formattedDay}`;
+
+                if (isCurrentMonth && day === todayDate) {
+                    dayDiv.classList.add('day-today');
+                }
+
+                dayDiv.addEventListener('click', function () {
+                    window.location.href = `/calendarOneDay?date=${fullDateStr}`;
+                });
+
+                miniCalendarDays.appendChild(dayDiv);
+            }
+
+            // 3. Дни следующего месяца: заполняем ровно до 42 ячеек (6 строк по 7 дней),
+            // чтобы сетка всегда была идеально ровной и карточка не прыгала по высоте
+            const totalRendered = shift + daysInMonth;
+            const remainingDays = 42 - totalRendered;
+            for (let nextDay = 1; nextDay <= remainingDays; nextDay++) {
+                const dayDiv = document.createElement('div');
+                dayDiv.className = 'day day-next';
+                dayDiv.textContent = nextDay < 10 ? '0' + nextDay : nextDay;
+
+                const nextDate = new Date(year, month + 1, nextDay);
+                const nMonth = String(nextDate.getMonth() + 1).padStart(2, '0');
+                const nDay = String(nextDay).padStart(2, '0');
+                const nDateStr = `${nextDate.getFullYear()}-${nMonth}-${nDay}`;
+
+                dayDiv.style.cursor = 'pointer';
+                dayDiv.addEventListener('click', function () {
+                    window.location.href = `/calendarOneDay?date=${nDateStr}`;
+                });
+
+                miniCalendarDays.appendChild(dayDiv);
+            }
+        }
+
+        // Выбор месяца из списка
+        miniCalMonthSelect.addEventListener('change', function () {
+            displayDate.setMonth(parseInt(this.value, 10));
+            renderMiniCalendar();
+        });
+
+        // Выбор года из списка
+        miniCalYearSelect.addEventListener('change', function () {
+            displayDate.setFullYear(parseInt(this.value, 10));
+            renderMiniCalendar();
+        });
+
+        // Стрелка "Предыдущий месяц"
+        if (miniCalPrevBtn) {
+            miniCalPrevBtn.addEventListener('click', function () {
+                displayDate.setMonth(displayDate.getMonth() - 1);
+                renderMiniCalendar();
+            });
+        }
+
+        // Стрелка "Следующий месяц"
+        if (miniCalNextBtn) {
+            miniCalNextBtn.addEventListener('click', function () {
+                displayDate.setMonth(displayDate.getMonth() + 1);
+                renderMiniCalendar();
+            });
+        }
+
+        renderMiniCalendar();
+    }
 
 
     // ==========================================

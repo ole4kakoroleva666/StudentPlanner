@@ -4,22 +4,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StudentPlanner</title>
-    <link rel="stylesheet" href="../../public/css/calendarOneDay.css">
+    <title>StudentPlanner — Расписание на день</title>
+    @vite(['resources/css/calendarOneDay.css', 'resources/js/calendarOneDay.js'])
 </head>
 
 <body>
     <header>
         <nav>
-            <img class="logotip" src="../../public/media/newlogo.svg" alt="Логотип">
-            <a>Главная</a>
-            <a>Задачи</a>
-            <a>Календарь</a>
-            <a>Домашнее задание</a>
-            <a>Расписание</a>
-            <a>Заметки</a>
-            <a>Моё</a>
-            <img src="../../public/media/Profile.svg" alt="Профиль">
+            <a href="/">
+                <img class="logotip" src="{{ asset('media/newlogo.svg') }}" alt="Логотип">
+            </a>
+            <a href="/">Главная</a>
+            <a href="/task">Задачи</a>
+            <a href="/calendar">Календарь</a>
+            <a href="/homework">Домашнее задание</a>
+            <a href="/shedule">Расписание</a>
+            <a href="/notes">Заметки</a>
+            <a href="/privateFiels">Моё</a>
+            <a href="/profile">
+                <img src="{{ asset('media/Profile.svg') }}" alt="Профиль">
+            </a>
         </nav>
     </header>
 
@@ -27,146 +31,79 @@
         <section>
             <div class="container">
                 <div class="title">
-                    <img src="../../public/media/back.svg" alt="back">
+                    <a href="/calendar" id="backToCalendarBtn">
+                        <img src="{{ asset('media/back.svg') }}" alt="back">
+                    </a>
+                    <p>Расписание</p>
                 </div>
+
                 <div class="week-mont">
                     <div class="month">
-                        <p>20 сентября</p>
+                        <p id="oneDayDateText">20 сентября</p>
                     </div>
                     <div class="week">
-                        <p>Суббота</p>
+                        <p id="oneDayWeekText">Суббота</p>
                     </div>
                 </div>
 
                 <div class="main-calendarOneDay">
+                    <!-- ЛЕВАЯ КОЛОНКА: РАСПИСАНИЕ -->
                     <div class="shedule-calendarOneDay">
                         <div class="shedule-header">
                             <p>Расписание</p>
-                            <img src="../../public/media/lessonNew.svg" alt="lesson">
+                            <img src="{{ asset('media/lessonNew.svg') }}" alt="lesson">
                         </div>
 
-                        <div class="onelesson">
-                            <div class="day-header">
-                                <h3>Понедельник</h3>
-                                <p class="date">20 февраля</p>
-                            </div>
-                            <div class="time">
-                                <img class="icons" src="../../public/media/time.svg" alt="time" />
-                                <p>Время: 14:15 — 15:50</p>
-                            </div>
-
-                            <div class="subject">
-                                <img class="icons" src="../../public/media/books.svg" alt="subject" />
-                                <p>Предмет: Проектирование и разработка интерфейсов</p>
-                            </div>
-
-                            <div class="classroom">
-                                <img class="icons" src="../../public/media/chool.svg" alt="classroom" />
-                                <p>Аудитория: 1-306</p>
-                            </div>
-
-                            <div class="teacher">
-                                <img class="icons" src="../../public/media/teacher.svg" alt="teacher" />
-                                <p>Преподаватель: Гунько Григорий Александрович</p>
-                            </div>
-                        </div>
-
-                        <div class="onelesson">
-                            <div class="time">
-                                <img class="icons" src="../../public/media/time.svg" alt="time" />
-                                <p>Время: 14:15 — 15:50</p>
-                            </div>
-
-                            <div class="subject">
-                                <img class="icons" src="../../public/media/books.svg" alt="subject" />
-                                <p>Предмет: Проектирование и разработка интерфейсов</p>
-                            </div>
-
-                            <div class="classroom">
-                                <img class="icons" src="../../public/media/chool.svg" alt="classroom" />
-                                <p>Аудитория: 1-306</p>
-                            </div>
-
-                            <div class="teacher">
-                                <img class="icons" src="../../public/media/teacher.svg" alt="teacher" />
-                                <p>Преподаватель: Гунько Григорий Александрович</p>
-                            </div>
-                        </div>
-
-                        <div class="onelesson">
-                            <div class="time">
-                                <img class="icons" src="../../public/media/time.svg" alt="time" />
-                                <p>Время: 14:15 — 15:50</p>
-                            </div>
-
-                            <div class="subject">
-                                <img class="icons" src="../../public/media/books.svg" alt="subject" />
-                                <p>Предмет: Проектирование и разработка интерфейсов</p>
-                            </div>
-
-                            <div class="classroom">
-                                <img class="icons" src="../../public/media/chool.svg" alt="classroom" />
-                                <p>Аудитория: 1-306</p>
-                            </div>
-
-                            <div class="teacher">
-                                <img class="icons" src="../../public/media/teacher.svg" alt="teacher" />
-                                <p>Преподаватель: Гунько Григорий Александрович</p>
-                            </div>
-                        </div>
+                        <!-- Контейнер для пар дня (заполняется через JS) -->
+                        <div id="lessonsContainer"></div>
                     </div>
 
+                    <!-- ПРАВАЯ КОЛОНКА: ДЗ И ЗАМЕТКИ -->
                     <div class="right-column">
+                        <!-- Блок Домашнее задание (только просмотр) -->
                         <div class="homeworkblock">
                             <div class="homework-header">
                                 <p>Домашнее задание</p>
-                                <img src="../../public/media/ex.svg" alt="homework">
+                                <img src="{{ asset('media/ex.svg') }}" alt="homework">
                             </div>
 
-                            <div class="homework-tasks">
+                            <div class="homework-tasks" id="hwList">
                                 <div class="homework-task">
                                     <input type="checkbox" id="hw1">
                                     <label for="hw1">Решить 2 уравнения</label>
                                 </div>
-
                                 <div class="homework-task">
                                     <input type="checkbox" id="hw2">
                                     <label for="hw2">Написать доклад (тема: экология)</label>
                                 </div>
-
                                 <div class="homework-task">
                                     <input type="checkbox" id="hw3">
                                     <label for="hw3">Доделать лабу</label>
                                 </div>
                             </div>
-
-                            <button class="add-homework-btn">
-                                <img src="../media/plus.svg" alt="add">
-                                <span>Добавить задание</span>
-                            </button>
                         </div>
 
+                        <!-- Блок Заметки (с удобным полем ввода) -->
                         <div class="notesblock">
                             <div class="notes-header">
-                                <p>Задачи</p>
+                                <p>Заметки</p>
                             </div>
 
-                            <div class="notes-list">
+                            <!-- Поле ввода, как на главной странице -->
+                            <div class="note-input-box">
+                                <input type="text" id="dayNoteInput" placeholder="Добавить заметку...">
+                            </div>
+
+                            <div class="notes-list" id="notesList">
                                 <div class="note-task">
                                     <input type="checkbox" id="note1">
                                     <label for="note1">Принести тетрадь по математике</label>
                                 </div>
-
                                 <div class="note-task">
                                     <input type="checkbox" id="note2">
                                     <label for="note2">Принести ручку</label>
                                 </div>
                             </div>
-
-                            <button class="add-note-btn">
-                                <img src="../../public/media/plus.svg" alt="add">
-                                <span>Добавить задачу</span>
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -177,7 +114,7 @@
         <footer>
             <div class="footer-container">
                 <div class="footer-left">
-                    <img class="footer-logo" src="../../public/media/newlogo.svg" alt="Логотип">
+                    <img class="footer-logo" src="{{ asset('media/newlogo.svg') }}" alt="Логотип">
                     <p class="footer-desc">Твой личный помощник в обучении</p>
                 </div>
 
@@ -195,9 +132,9 @@
                     <div class="footer-social">
                         <h4>Мы в соцсетях</h4>
                         <div class="social-icons">
-                            <img src="../../public/media/goglenew.svg" alt="google">
-                            <img src="../../public/media/telegram.svg" alt="telegram">
-                            <img src="../../public/media/vk.svg" alt="vk">
+                            <img src="{{ asset('media/goglenew.svg') }}" alt="google">
+                            <img src="{{ asset('media/telegram.svg') }}" alt="telegram">
+                            <img src="{{ asset('media/vk.svg') }}" alt="vk">
                         </div>
                     </div>
                 </div>

@@ -31,6 +31,11 @@
   flex-shrink: 0;
 }
 
+.card-head a {
+  text-decoration: none;
+  color: inherit;
+}
+
 .card-head h2 {
   font-size: 2.4rem;
   font-family: 'JostSemiBold', sans-serif;
@@ -211,13 +216,63 @@
   flex-direction: column;
 }
 
-.card-body-calendar-month {
-  font-family: "RobotoMedium", sans-serif;
-  font-size: 2.1rem;
-  color: #3C3E4C;
+.card-body-calendar-header {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 2.2rem;
+}
+
+.calendar-selects {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+}
+
+.calendar-select {
+  font-family: "RobotoMedium", sans-serif;
+  font-size: 1.8rem;
+  color: #3C3E4C;
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.calendar-select:hover,
+.calendar-select:focus {
+  background-color: rgba(99, 106, 163, 0.1);
+  border-color: rgba(99, 106, 163, 0.25);
+}
+
+.calendar-btn {
+  background: none;
+  border: none;
+  font-size: 2.4rem;
+  font-weight: 300;
+  color: #636AA3;
+  cursor: pointer;
+  line-height: 1;
+  width: 3.2rem;
+  height: 3.2rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
+}
+
+.calendar-btn:hover {
+  background-color: rgba(99, 106, 163, 0.12);
+  color: #3C3E4C;
+  transform: scale(1.08);
+}
+
+.calendar-btn:active {
+  transform: scale(0.94);
 }
 
 .calendar {
@@ -245,7 +300,7 @@
   text-align: center;
 }
 
-.card-calendar-days>.day {
+.card-calendar-days > .day {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -254,22 +309,27 @@
   width: 3rem;
   border-radius: 50%;
   margin: 0 auto;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-.card-calendar-days>.day-next {
+.card-calendar-days > .day-prev,
+.card-calendar-days > .day-next {
   color: #BEC4E3;
+  cursor: default;
 }
 
-.card-calendar-days>.day:hover,
-.card-calendar-days>.day-next:hover {
-  background-color: #F8F9FE;
-  border: 1px solid #BEC4E3;
+.card-calendar-days > .day:not(.day-prev):not(.day-next):hover {
+  background-color: rgba(99, 106, 163, 0.15);
 }
 
-.card-calendar-days>.day:nth-child(23) {
+.card-calendar-days > .day.day-today {
   background-color: #636AA3;
   color: #FFF;
+  font-family: "RobotoMedium", sans-serif;
+}
+
+.card-calendar-days > .day.day-today:hover {
+  background-color: #52598c;
 }
 
 /* ==========================================

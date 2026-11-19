@@ -31,6 +31,7 @@ export default defineConfig({
                 'resources/js/homeworkNew.js',
                 'resources/js/profile.js',
                 'resources/js/calendar.js',
+                'resources/js/calendarOneDay.js',
                 'resources/js/welcome.js',
             ],
             refresh: true, // горячая перезагрузка браузера

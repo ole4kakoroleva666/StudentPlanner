@@ -4,399 +4,210 @@ body {
     background-color: #F5F6FF;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
+/* ==========================================
+   ЗАГОЛОВОК С ФИКСИРОВАННОЙ СТРЕЛКОЙ НАЗАД
+   ========================================== */
 .title {
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
-    margin-bottom: 9.4rem;
+    width: 100%;
+    min-height: 5.4rem;
+    margin-bottom: 4rem;
 }
 
-.title>img {
-    width: 5.3rem;
-    height: 5.3rem;
+.title > a {
     position: absolute;
     left: 0;
     top: 50%;
     transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 5rem;
+    height: 5rem;
+    border-radius: 50%;
+    transition: background-color 0.2s ease, transform 0.15s ease;
 }
 
-.title>p {
+.title > a:hover {
+    background-color: rgba(99, 106, 163, 0.12);
+    transform: translateY(-50%) scale(1.06);
+}
+
+.title > a:active {
+    transform: translateY(-50%) scale(0.96);
+}
+
+.title > a > img,
+.title > img {
+    width: 4rem;
+    height: 4rem;
+}
+
+.title > p {
     font-size: 3.6rem;
-    font-family: 'JostSemiBold';
+    font-family: 'JostSemiBold', sans-serif;
     color: #3C3E4C;
+}
+
+/* ==========================================
+   КАРТОЧКА ФОРМЫ СОЗДАНИЯ ДЗ
+   ========================================== */
+.create-homework-card {
+    max-width: 84rem;
+    margin: 0 auto 10rem auto;
+    background-color: #FFFFFF;
+    border-radius: 2rem;
+    padding: 4rem;
+    box-shadow: 20px 25px 75px rgba(0, 0, 0, 0.07);
+    border: 0.1rem solid #F0F2FA;
 }
 
 .create-homework {
     display: flex;
-    justify-content: space-between;
-    gap: 15rem;
+    flex-direction: column;
+    gap: 2.4rem;
 }
 
-.one-section>p {
-    font-size: 2rem;
+.one-section label {
+    display: block;
+    font-size: 1.8rem;
+    font-family: "JostSemiBold", sans-serif;
     color: #3C3E4C;
-    font-family: "RobotoRegular";
-    margin-bottom: 2.3rem;
+    margin-bottom: 1rem;
 }
 
-.new-homework-input {
-    background-color: #ffffff;
-    box-shadow: 15px 15px 50px #E6E7F6;
-    width: 27.1rem;
-    height: 9rem;
-    border-radius: 1rem;
-    padding: 3rem;
-    display: flex;
-    margin-right: 6.2rem;
+.new-homework-input input {
+    width: 100%;
+    height: 5.2rem;
+    background-color: #F8F9FE;
+    border: 0.15rem solid #BEC4E3;
+    border-radius: 1.2rem;
+    padding: 0 1.8rem;
+    font-size: 1.6rem;
+    font-family: "RobotoRegular", sans-serif;
+    color: #3C3E4C;
+    outline: none;
+    transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.new-homework-input>img {
-    width: 3.9rem;
+.new-homework-input input:focus {
+    border-color: #636AA3;
+    background-color: #FFFFFF;
+    box-shadow: 0 0 0 0.3rem rgba(99, 106, 163, 0.15);
+}
+
+.new-homework-input input::placeholder {
+    color: #BEC4E3;
+}
+
+/* Обертка для поля даты с иконкой календаря */
+.date-input-wrapper {
+    position: relative;
     display: flex;
     align-items: center;
 }
 
+.date-input-wrapper img {
+    position: absolute;
+    right: 1.8rem;
+    width: 2.2rem;
+    height: 2.2rem;
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+/* ==========================================
+   ПРИКРЕПЛЕНИЕ ФАЙЛА
+   ========================================== */
 .upload-file {
-    margin-top: 14.2rem;
-    margin-bottom: 4.7rem;
     display: flex;
     align-items: center;
-    gap: 1rem;
+    justify-content: space-between;
+    margin-top: 3.2rem;
+    padding-top: 2.4rem;
+    border-top: 0.1rem solid #F0F2FA;
 }
-
 
 .upload-file-text {
-    font-family: "RobotoRegular";
-    font-size: 2rem;
+    font-family: "JostSemiBold", sans-serif;
+    font-size: 1.8rem;
     color: #3C3E4C;
-}
-
-.upload-file-input {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.upload-file-input>img {
-    height: 3rem;
 }
 
 .file-input-hidden {
-    width: 0.1rem;
-    height: 0.1rem;
-    opacity: 0;
-    position: absolute;
-    z-index: -1;
+    display: none;
 }
 
 .upload-file-button {
-    font-family: "RobotoRegular";
-    font-size: 1.6rem;
-    color: #3C3E4C;
-    background-color: #FFF;
-    border: 0.1rem solid #3C3E4C;
-    border-radius: 0.5rem;
-    padding: 0.2rem 1.8rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.2rem 2.2rem;
+    background-color: #F8F9FE;
+    border: 0.15rem dashed #BEC4E3;
+    border-radius: 1.2rem;
     cursor: pointer;
+    font-size: 1.5rem;
+    font-family: "RobotoRegular", sans-serif;
+    color: #636AA3;
     transition: all 0.2s ease;
-    display: inline-block;
+}
+
+.upload-file-button img {
+    width: 2rem;
+    height: 2rem;
 }
 
 .upload-file-button:hover {
-    background-color: #F0F0F0;
-    transform: translateY(-0.1rem);
+    border-color: #636AA3;
+    background-color: rgba(99, 106, 163, 0.08);
 }
 
+/* ==========================================
+   КНОПКА ОТПРАВКИ ФОРМЫ
+   ========================================== */
 .create-button {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 13.3rem;
-
+    margin-top: 3.6rem;
 }
 
 .add-task-button {
-    font-family: 'RobotoRegular';
-    font-size: 2.4rem;
-    color: #FFFFFF;
+    width: 100%;
+    height: 5.4rem;
     background-color: #636AA3;
+    color: #FFFFFF;
+    font-size: 1.8rem;
+    font-family: "RobotoMedium", sans-serif;
     border: none;
-    border-radius: 1rem;
-    padding: 1.1rem 3.9rem;
+    border-radius: 1.4rem;
     cursor: pointer;
+    box-shadow: 0 4px 18px rgba(99, 106, 163, 0.28);
+    transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
 }
 
 .add-task-button:hover {
-    background-color: #4f5691;
+    background-color: #4A508F;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(99, 106, 163, 0.38);
 }
 
 .add-task-button:active {
-    background-color: #3C3E4C;
-    transform: scale(1)
+    transform: translateY(0);
 }
 
-@media (max-width: 1280px) {
-
-    html {
-        font-size: 60%;
-    }
-
-    .container {
-        max-width: 100rem;
-        padding: 0 3rem;
-    }
-
-    .title {
-        margin-bottom: 7rem;
-    }
-
-    .title>p {
-        font-size: 3.2rem;
-    }
-
-    .create-homework {
-        gap: 10rem;
-    }
-
-    .one-section>p {
-        font-size: 1.8rem;
-    }
-
-    .new-homework-input {
-        height: 8rem;
-        padding: 0 2.5rem;
-    }
-
-    .new-homework-input input {
-        font-size: 1.7rem;
-    }
-
-    .upload-file {
-        margin-top: 10rem;
-        margin-bottom: 4rem;
-    }
-
-    .upload-file-text {
-        font-size: 1.8rem;
-    }
-
-    .add-task-button {
-        font-size: 2.2rem;
-        padding: 1.3rem 4rem;
-    }
-}
-
-
-@media (max-width: 1024px) {
-
-    html {
-        font-size: 58%;
-    }
-
-    .container {
-        padding: 0 2rem;
-    }
-
-    .title {
-        margin-bottom: 5rem;
-        margin-top: 2rem;
-        justify-content: flex-start;
-    }
-
-    .title>img {
-        position: relative;
-        left: auto;
-        top: auto;
-        transform: none;
-        margin-right: 2rem;
-        width: 4.5rem;
-        height: 4.5rem;
-    }
-
-    .title>p {
-        font-size: 2.8rem;
-        text-align: left;
-    }
-
-    .create-homework {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .one-section {
-        width: 100%;
-    }
-
-    .one-section>p {
-        font-size: 1.8rem;
-        margin-bottom: 1.5rem;
-    }
-
-    .new-homework-input {
-        max-width: 50rem;
-        height: 7rem;
-    }
-
-    .upload-file {
-        margin-top: 8rem;
-        margin-bottom: 3rem;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 2rem;
-    }
-
-    .upload-file-input {
-        width: 100%;
-        justify-content: flex-start;
-    }
-
-    .create-button {
-        justify-content: flex-start;
-        margin-bottom: 10rem;
-    }
-
-    .add-task-button {
-        width: 100%;
-        max-width: 30rem;
-        padding: 1.2rem 0;
-    }
-}
-
-
+/* ==========================================
+   АДАПТИВНОСТЬ
+   ========================================== */
 @media (max-width: 768px) {
-    .container {
-        padding: 0 1.5rem;
+    .create-homework-card {
+        padding: 2.5rem 2rem;
     }
 
-    .title {
+    .upload-file {
         flex-direction: column;
         align-items: flex-start;
-        margin-bottom: 3rem;
-        margin-top: 1rem;
-    }
-
-    .title>img {
-        margin-right: 0;
-        margin-bottom: 1rem;
-        width: 4rem;
-        height: 4rem;
-    }
-
-    .title>p {
-        font-size: 2.4rem;
-        text-align: left;
-        width: 100%;
-    }
-
-    .create-homework {
-        gap: 3rem;
-    }
-
-    .one-section>p {
-        font-size: 1.6rem;
-        margin-bottom: 1rem;
-    }
-
-    .new-homework-input {
-        height: 6rem;
-        padding: 0 2rem;
-        min-width: auto;
-    }
-
-    .new-homework-input input {
-        font-size: 1.6rem;
-    }
-
-    .new-homework-input>img {
-        width: 3.2rem;
-        height: 3.2rem;
-    }
-
-    .upload-file {
-        margin-top: 6rem;
-        margin-bottom: 3rem;
-    }
-
-    .upload-file-text {
-        font-size: 1.6rem;
-    }
-
-    .upload-file-button {
-        font-size: 1.4rem;
-        padding: 0.7rem 2rem;
-    }
-
-    .upload-file-input>img {
-        height: 2.5rem;
-        width: 2.5rem;
-    }
-
-    .create-button {
-        margin-bottom: 8rem;
-    }
-
-    .add-task-button {
-        font-size: 1.8rem;
-        padding: 1rem 0;
-        max-width: 100%;
-    }
-}
-
-@media (max-width: 480px) {
-
-    .title {
-        display: flex;
-        flex-direction: row;
-    }
-
-    .title>img {
-        width: 3.5rem;
-        height: 3.5rem;
-    }
-
-    .title>p {
-        font-size: 2rem;
-    }
-
-    .one-section>p {
-        font-size: 1.4rem;
-    }
-
-    .new-homework-input {
-        height: 5.5rem;
-        padding: 0 1.5rem;
-    }
-
-    .new-homework-input input {
-        font-size: 1.4rem;
-    }
-
-    .new-homework-input>img {
-        width: 2.8rem;
-        height: 2.8rem;
-    }
-
-    .upload-file {
-        margin-top: 5rem;
-    }
-
-    .upload-file-text {
-        font-size: 1.4rem;
-    }
-
-    .upload-file-button {
-        font-size: 1.3rem;
-        padding: 0.6rem 1.5rem;
-    }
-
-    .add-task-button {
-        font-size: 1.6rem;
-        padding: 0.9rem 0;
+        gap: 1.4rem;
     }
 }
