@@ -157,11 +157,69 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // ========================================================
-    // 4. ЗАЧЕРКИВАНИЕ ПРИ КЛИКЕ НА ЧЕКБОКС (ДЗ И ЗАМЕТКИ)
+    // 4. СИНХРОНИЗАЦИЯ ДОМАШНЕГО ЗАДАНИЯ С ОБЩИМ СПИСКОМ
     // ========================================================
-    function handleCheckboxToggle(container) {
-        if (!container) return;
-        container.addEventListener('change', function (e) {
+    const HW_STORAGE_KEY = 'studentplanner_homework';
+
+    function loadDayHomework() {
+        const raw = localStorage.getItem(HW_STORAGE_KEY);
+        if (raw) {
+            try { return JSON.parse(raw); } catch (e) { /* ignore */ }
+        }
+        return [
+            { id: 1, subject: 'Математика',  text: 'Страница 83 учить правило, распечатать правило', completed: false },
+            { id: 2, subject: 'Информатика', text: 'Лабораторная работа №3: спроектировать реляционную базу данных', completed: false },
+            { id: 3, subject: 'Физика',      text: 'Задачи 4.12 — 4.18 в сборнике задач', completed: false }
+        ];
+    }
+
+    function renderDayHomework() {
+        if (!hwList) return;
+        const list = loadDayHomework();
+        hwList.innerHTML = '';
+
+        if (!list || list.length === 0) {
+            hwList.innerHTML = '<p style="color: #9AA0C3; font-size: 1.5rem; text-align: center; padding: 2rem 0;">Заданий пока нет</p>';
+            return;
+        }
+
+        list.forEach(hw => {
+            const hwItem = document.createElement('div');
+            hwItem.className = 'homework-task';
+            hwItem.dataset.id = hw.id;
+
+            const isChecked = hw.completed ? 'checked' : '';
+            const titleFull = (hw.subject ? hw.subject + ': ' : '') + hw.text;
+
+            hwItem.innerHTML = `
+                <input type="checkbox" id="day_hw_${hw.id}" ${isChecked}>
+                <label for="day_hw_${hw.id}">${titleFull}</label>
+            `;
+            hwList.appendChild(hwItem);
+        });
+    }
+
+    if (hwList) {
+        renderDayHomework();
+
+        hwList.addEventListener('change', function (e) {
+            if (e.target.matches('input[type="checkbox"]')) {
+                const itemDiv = e.target.closest('.homework-task');
+                if (!itemDiv) return;
+                const id = Number(itemDiv.dataset.id);
+                const list = loadDayHomework();
+                const item = list.find(h => h.id === id);
+                if (item) {
+                    item.completed = e.target.checked;
+                    localStorage.setItem(HW_STORAGE_KEY, JSON.stringify(list));
+                }
+            }
+        });
+    }
+
+    // Чекбоксы заметок (зачеркивание)
+    if (notesList) {
+        notesList.addEventListener('change', function (e) {
             if (e.target.matches('input[type="checkbox"]')) {
                 const label = e.target.parentElement.querySelector('label');
                 if (label) {
@@ -171,7 +229,4 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
-
-    handleCheckboxToggle(hwList);
-    handleCheckboxToggle(notesList);
 });

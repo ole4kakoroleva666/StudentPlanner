@@ -91,39 +91,112 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     // ==========================================
-    // 2. БЛОК "ДОМАШНЕЕ ЗАДАНИЕ"
+    // 2. БЛОК "ДОМАШНЕЕ ЗАДАНИЕ" (синхронизирован с /homework)
     // ==========================================
+    const HW_STORAGE_KEY = 'studentplanner_homework';
     const hwInput = document.querySelector('#hwInput');
     const hwContainer = document.querySelector('#hwContainer');
 
-    if (hwInput && hwContainer) {
-        hwInput.addEventListener('keydown', function (e) {
-            if (e.key === 'Enter') {
-                const text = hwInput.value.trim();
-                if (text === '') return;
+    function loadHomeworkList() {
+        const raw = localStorage.getItem(HW_STORAGE_KEY);
+        if (raw) {
+            try { return JSON.parse(raw); } catch (e) { /* ignore */ }
+        }
+        return [
+            { id: 1, subject: 'Математика',  text: 'Страница 83 учить правило, распечатать правило', deadline: '15.09.25', added: Date.now() - 200000, completed: false },
+            { id: 2, subject: 'Информатика', text: 'Лабораторная работа №3: спроектировать реляционную базу данных', deadline: '18.09.25', added: Date.now() - 100000, completed: false },
+            { id: 3, subject: 'Физика',      text: 'Задачи 4.12 — 4.18 в сборнике задач', deadline: '20.09.25', added: Date.now(), completed: false }
+        ];
+    }
 
-                hideEmptyState(hwContainer);
+    function saveHomeworkList(list) {
+        localStorage.setItem(HW_STORAGE_KEY, JSON.stringify(list));
+    }
 
-                const newId = 'hw_' + Date.now();
-                const hwDiv = document.createElement('div');
-                hwDiv.className = 'card-body-tasks-task';
-                hwDiv.innerHTML = `
-                    <input type="checkbox" id="${newId}">
-                    <label for="${newId}">${text}</label>
-                `;
+    function renderMainHomework() {
+        if (!hwContainer) return;
+        const list = loadHomeworkList();
 
-                hwContainer.prepend(hwDiv);
-                hwInput.value = '';
-            }
+        hwContainer.innerHTML = '';
+
+        if (!list || list.length === 0) {
+            hwContainer.innerHTML = '<p class="empty-state" style="color: #9AA0C3; font-size: 1.6rem; text-align: center; margin-top: 3rem;">Домашних заданий пока нет</p>';
+            return;
+        }
+
+        list.forEach(hw => {
+            const hwDiv = document.createElement('div');
+            hwDiv.className = 'card-body-tasks-task';
+            hwDiv.dataset.id = hw.id;
+
+            const isChecked = hw.completed ? 'checked' : '';
+            const hasDeadline = hw.deadline ? 'has-deadline' : '';
+            const deadlineHtml = hw.deadline ? `<p>до ${hw.deadline}</p>` : '';
+            const titleFull = (hw.subject ? hw.subject + ': ' : '') + hw.text;
+
+            hwDiv.innerHTML = `
+                <input type="checkbox" id="main_hw_${hw.id}" ${isChecked}>
+                <div class="task-text-content ${hasDeadline}">
+                    <label for="main_hw_${hw.id}" title="${titleFull}">
+                        <strong>${hw.subject ? hw.subject + ': ' : ''}</strong>${hw.text}
+                    </label>
+                    ${deadlineHtml}
+                </div>
+            `;
+            hwContainer.appendChild(hwDiv);
         });
+    }
 
+    if (hwContainer) {
+        renderMainHomework();
+
+        // Отметка выполнения (чекбокс синхронизируется в localStorage)
         hwContainer.addEventListener('change', function (e) {
             if (e.target.matches('input[type="checkbox"]')) {
-                const label = e.target.closest('.card-body-tasks-task').querySelector('label');
-                if (label) {
-                    label.style.textDecoration = e.target.checked ? 'line-through' : 'none';
-                    label.style.opacity = e.target.checked ? '0.5' : '1';
+                const taskCard = e.target.closest('.card-body-tasks-task');
+                if (!taskCard) return;
+                const id = Number(taskCard.dataset.id);
+                const list = loadHomeworkList();
+                const item = list.find(h => h.id === id);
+                if (item) {
+                    item.completed = e.target.checked;
+                    saveHomeworkList(list);
                 }
+            }
+        });
+    }
+
+    // Быстрое добавление задания с главной страницы через Enter
+    if (hwInput) {
+        hwInput.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') {
+                const fullText = hwInput.value.trim();
+                if (fullText === '') return;
+
+                // Если пользователь ввёл "Химия: параграф 12", отделяем предмет
+                let subject = 'Задание';
+                let text = fullText;
+                if (fullText.includes(':')) {
+                    const parts = fullText.split(':');
+                    subject = parts[0].trim();
+                    text = parts.slice(1).join(':').trim();
+                }
+
+                const list = loadHomeworkList();
+                const newId = list.length > 0 ? Math.max(...list.map(h => h.id)) + 1 : 1;
+
+                list.unshift({
+                    id: newId,
+                    subject: subject,
+                    text: text,
+                    deadline: null,
+                    added: Date.now(),
+                    completed: false
+                });
+
+                saveHomeworkList(list);
+                renderMainHomework();
+                hwInput.value = '';
             }
         });
     }

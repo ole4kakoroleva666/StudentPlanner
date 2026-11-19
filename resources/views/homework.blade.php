@@ -42,8 +42,22 @@
                         <img src="{{ asset('media/plus.svg') }}" alt="plus">
                         Добавить дз
                     </a>
+                </div>
 
-                    <p class="subtitle">Ближайшее домашнее задание</p>
+                <p class="subtitle">Ближайшее домашнее задание</p>
+
+                <!-- Панель управления: сортировка и поиск -->
+                <div class="hw-controls">
+                    <div class="hw-sort-group">
+                        <span class="hw-controls-label">Сортировка:</span>
+                        <div class="hw-sort-toggle">
+                            <button type="button" class="hw-sort-btn active" data-sort="deadline">По дедлайну</button>
+                            <button type="button" class="hw-sort-btn" data-sort="added">По добавлению</button>
+                        </div>
+                    </div>
+                    <div class="hw-filter-group">
+                        <input type="text" id="hwSearchInput" class="hw-search" placeholder="Поиск по предмету или заданию...">
+                    </div>
                 </div>
 
                 <!-- Список домашних заданий (интерактивный через JS) -->

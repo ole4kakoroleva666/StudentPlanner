@@ -53,13 +53,14 @@ body {
 }
 
 /* ==========================================
-   ВЕРХНИЙ БЛОК: КНОПКА ДОБАВИТЬ И ПОДЗАГОЛОВОК
+   ВЕРХНИЙ БЛОК: КНОПКА ДОБАВИТЬ
    ========================================== */
+
 .create-my-homework {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
 }
 
 .add-hw-btn {
@@ -95,11 +96,14 @@ body {
     transform: translateY(0);
 }
 
-.create-my-homework .subtitle {
+/* Заголовок — по ширине списка, прижат влево */
+.subtitle {
     font-size: 2.4rem;
     font-family: "JostSemiBold", sans-serif;
     color: #3C3E4C;
-    margin-top: 3.5rem;
+    max-width: 90rem;
+    margin: 0 auto 2rem auto;
+    display: block;
 }
 
 /* ==========================================
@@ -131,6 +135,16 @@ body {
     box-shadow: 20px 25px 70px rgba(0, 0, 0, 0.08);
 }
 
+.one-homework.completed {
+    opacity: 0.75;
+    background-color: #FAFAFF;
+}
+
+.one-homework.completed .homework-text {
+    text-decoration: line-through;
+    color: #9AA0C3;
+}
+
 .homework-info {
     flex: 1;
     min-width: 0;
@@ -149,6 +163,19 @@ body {
     color: #636AA3;
     line-height: 1.45;
     word-break: break-word;
+}
+
+.hw-attached-file {
+    margin-top: 0.8rem;
+    font-size: 1.3rem;
+    font-family: "RobotoRegular", sans-serif;
+    color: #636AA3;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #F0F2FA;
+    padding: 0.4rem 1.2rem;
+    border-radius: 0.8rem;
 }
 
 .homework-meta {
@@ -217,6 +244,87 @@ body {
 }
 
 /* ==========================================
+   ПАНЕЛЬ УПРАВЛЕНИЯ: СОРТИРОВКА И ПОИСК
+   ========================================== */
+.hw-controls {
+    max-width: 90rem;
+    margin: 0 auto 2.4rem auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.hw-controls-label {
+    font-size: 1.4rem;
+    font-family: "RobotoRegular", sans-serif;
+    color: #9AA0C3;
+    white-space: nowrap;
+}
+
+.hw-sort-group {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+}
+
+/* Переключатель сортировки (Segmented Toggle) */
+.hw-sort-toggle {
+    display: inline-flex;
+    background-color: #EAEFFC;
+    border-radius: 2rem;
+    padding: 0.3rem;
+    gap: 0.3rem;
+}
+
+.hw-sort-btn {
+    font-size: 1.4rem;
+    font-family: "RobotoRegular", sans-serif;
+    color: #636AA3;
+    background: transparent;
+    border: none;
+    border-radius: 1.8rem;
+    padding: 0.7rem 1.8rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hw-sort-btn.active {
+    background-color: #636AA3;
+    color: #FFFFFF;
+    font-family: "RobotoMedium", sans-serif;
+    box-shadow: 0 2px 8px rgba(99, 106, 163, 0.25);
+}
+
+.hw-sort-btn:not(.active):hover {
+    color: #3C3E4C;
+}
+
+.hw-search {
+    height: 4.2rem;
+    width: 34rem;
+    background-color: #F8F9FE;
+    border: 0.15rem solid #BEC4E3;
+    border-radius: 2rem;
+    padding: 0 1.8rem;
+    font-size: 1.35rem;
+    font-family: "RobotoRegular", sans-serif;
+    color: #3C3E4C;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.hw-search::placeholder {
+    font-size: 1.3rem;
+    color: #9AA0C3;
+}
+
+.hw-search:focus {
+    border-color: #636AA3;
+}
+
+/* ==========================================
    АДАПТИВНОСТЬ
    ========================================== */
 @media (max-width: 768px) {
@@ -230,5 +338,15 @@ body {
     .homework-meta {
         width: 100%;
         justify-content: space-between;
+    }
+
+    .hw-controls {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .hw-search {
+        width: 100%;
+        min-width: unset;
     }
 }

@@ -60,8 +60,9 @@
                             <div class="one-section">
                                 <label for="hwDeadlineInput">Срок сдачи</label>
                                 <div class="new-homework-input date-input-wrapper">
-                                    <input type="text" id="hwDeadlineInput" placeholder="ДД.ММ.ГГГГ" required>
-                                    <img src="{{ asset('media/calendar.svg') }}" alt="calendar">
+                                    <input type="text" id="hwDeadlineInput" placeholder="ДД.ММ.ГГ" maxlength="8" autocomplete="off">
+                                    <input type="date" id="hwDatePicker" class="date-picker-native" tabindex="-1">
+                                    <img src="{{ asset('media/calendar.svg') }}" alt="calendar" id="calendarIcon" title="Выбрать дату в календаре">
                                 </div>
                             </div>
                         </div>

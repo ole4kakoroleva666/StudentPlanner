@@ -79,6 +79,13 @@ body {
     margin-bottom: 1rem;
 }
 
+.optional-label {
+    font-size: 1.3rem;
+    font-family: "RobotoRegular", sans-serif;
+    color: #9AA0C3;
+    font-weight: normal;
+}
+
 .new-homework-input input {
     width: 100%;
     height: 5.2rem;
@@ -103,20 +110,49 @@ body {
     color: #BEC4E3;
 }
 
-/* Обертка для поля даты с иконкой календаря */
+/* Обертка для поля даты */
 .date-input-wrapper {
     position: relative;
     display: flex;
     align-items: center;
+    width: 100%;
 }
 
+.date-input-wrapper input[type="text"] {
+    padding-right: 5rem;
+}
+
+/* Скрытый нативный date-пикер */
+.date-picker-native {
+    position: absolute;
+    right: 1.8rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2.6rem;
+    height: 2.6rem;
+    opacity: 0;
+    pointer-events: none;
+    border: none;
+    z-index: 1;
+}
+
+/* Иконка календаря — кликабельная и на месте */
 .date-input-wrapper img {
     position: absolute;
     right: 1.8rem;
-    width: 2.2rem;
-    height: 2.2rem;
-    pointer-events: none;
-    opacity: 0.6;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2.4rem;
+    height: 2.4rem;
+    cursor: pointer;
+    opacity: 0.75;
+    transition: opacity 0.2s ease, transform 0.15s ease;
+    z-index: 2;
+}
+
+.date-input-wrapper img:hover {
+    opacity: 1;
+    transform: translateY(-50%) scale(1.1);
 }
 
 /* ==========================================
@@ -210,4 +246,74 @@ body {
         align-items: flex-start;
         gap: 1.4rem;
     }
+}
+
+/* ==========================================
+   АВТОДОПОЛНЕНИЕ ПРЕДМЕТОВ (ВЫПАДАЮЩИЙ СПИСОК)
+   ========================================== */
+.subject-suggestions {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background-color: #FFFFFF;
+    border: 0.15rem solid #BEC4E3;
+    border-top: none;
+    border-radius: 0 0 1.2rem 1.2rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    max-height: 24rem;
+    overflow-y: auto;
+}
+
+.suggestion-item {
+    padding: 1.2rem 1.8rem;
+    font-size: 1.6rem;
+    font-family: "RobotoRegular", sans-serif;
+    color: #3C3E4C;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.suggestion-item:hover {
+    background-color: #F0F2FA;
+    color: #636AA3;
+}
+
+/* ==========================================
+   СООБЩЕНИЯ ОБ ОШИБКАХ ПОД ПОЛЯМИ
+   ========================================== */
+.field-error {
+    font-size: 1.3rem;
+    font-family: "RobotoRegular", sans-serif;
+    color: #EB5757;
+    margin-top: 0.6rem;
+    padding-left: 0.4rem;
+}
+
+/* ==========================================
+   ВСПЛЫВАЮЩЕЕ УВЕДОМЛЕНИЕ (TOAST)
+   ========================================== */
+.hw-toast {
+    position: fixed;
+    bottom: 4rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(2rem);
+    background-color: #3C3E4C;
+    color: #FFFFFF;
+    font-size: 1.6rem;
+    font-family: "RobotoMedium", sans-serif;
+    padding: 1.4rem 3rem;
+    border-radius: 1.4rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 9999;
+    white-space: nowrap;
+}
+
+.hw-toast--visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
 }
