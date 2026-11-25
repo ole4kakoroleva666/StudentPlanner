@@ -4,7 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StudentPlanner — Домашнее задание</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Домашка – SP</title>
+    <link rel="icon" type="image/svg+xml" href="{{ asset('media/favicon.svg') }}">
     @vite(['resources/css/homework.css', 'resources/js/homework.js'])
 </head>
 
@@ -21,9 +23,7 @@
             <a href="/shedule">Расписание</a>
             <a href="/notes">Заметки</a>
             <a href="/privateFiels">Моё</a>
-            <a href="/profile">
-                <img src="{{ asset('media/Profile.svg') }}" alt="Профиль">
-            </a>
+            @include('partials.header-avatar')
         </nav>
     </header>
 
@@ -60,64 +60,10 @@
                     </div>
                 </div>
 
-                <!-- Список домашних заданий (интерактивный через JS) -->
-                <div class="my-homework" id="homeworkList">
-                    <!-- Задание 1 -->
-                    <div class="one-homework" data-id="1">
-                        <div class="homework-info">
-                            <div class="homework-name">Математика</div>
-                            <div class="homework-text">Страница 83 учить правило, распечатать правило</div>
-                        </div>
-                        <div class="homework-meta">
-                            <span class="homework-deadline">до 15.09.25</span>
-                            <div class="homework-buttons">
-                                <button type="button" class="hw-btn hw-btn-download" title="Скачать файл">
-                                    <img src="{{ asset('media/download.svg') }}" alt="download">
-                                </button>
-                                <button type="button" class="hw-btn hw-btn-delete" title="Удалить задание">
-                                    <img src="{{ asset('media/delete.svg') }}" alt="delete">
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Задание 2 -->
-                    <div class="one-homework" data-id="2">
-                        <div class="homework-info">
-                            <div class="homework-name">Информатика</div>
-                            <div class="homework-text">Лабораторная работа №3: спроектировать реляционную базу данных</div>
-                        </div>
-                        <div class="homework-meta">
-                            <span class="homework-deadline">до 18.09.25</span>
-                            <div class="homework-buttons">
-                                <button type="button" class="hw-btn hw-btn-download" title="Скачать файл">
-                                    <img src="{{ asset('media/download.svg') }}" alt="download">
-                                </button>
-                                <button type="button" class="hw-btn hw-btn-delete" title="Удалить задание">
-                                    <img src="{{ asset('media/delete.svg') }}" alt="delete">
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Задание 3 -->
-                    <div class="one-homework" data-id="3">
-                        <div class="homework-info">
-                            <div class="homework-name">Физика</div>
-                            <div class="homework-text">Задачи 4.12 — 4.18 в сборнике задач</div>
-                        </div>
-                        <div class="homework-meta">
-                            <span class="homework-deadline">до 20.09.25</span>
-                            <div class="homework-buttons">
-                                <button type="button" class="hw-btn hw-btn-download" title="Скачать файл">
-                                    <img src="{{ asset('media/download.svg') }}" alt="download">
-                                </button>
-                                <button type="button" class="hw-btn hw-btn-delete" title="Удалить задание">
-                                    <img src="{{ asset('media/delete.svg') }}" alt="delete">
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                <!-- Список домашних заданий (данные из БД) -->
+                <div class="my-homework"
+                     id="homeworkList"
+                     data-homeworks='@json($homeworks ?? [])'>
                 </div>
 
             </div>

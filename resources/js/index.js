@@ -1,3 +1,5 @@
+import { confirmDelete } from './confirmModal';
+
 document.addEventListener('DOMContentLoaded', function () {
 
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
@@ -91,54 +93,51 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     // ==========================================
-    // 2. БЛОК "ДОМАШНЕЕ ЗАДАНИЕ" (синхронизирован с /homework)
+    // 2. БЛОК "ДОМАШНЕЕ ЗАДАНИЕ" (из БД)
     // ==========================================
-    const HW_STORAGE_KEY = 'studentplanner_homework';
     const hwInput = document.querySelector('#hwInput');
     const hwContainer = document.querySelector('#hwContainer');
 
-    function loadHomeworkList() {
-        const raw = localStorage.getItem(HW_STORAGE_KEY);
-        if (raw) {
-            try { return JSON.parse(raw); } catch (e) { /* ignore */ }
+    let homeHomeworks = [];
+    if (hwContainer) {
+        try {
+            homeHomeworks = JSON.parse(hwContainer.dataset.homeworks || '[]') || [];
+        } catch {
+            homeHomeworks = [];
         }
-        return [
-            { id: 1, subject: 'Математика',  text: 'Страница 83 учить правило, распечатать правило', deadline: '15.09.25', added: Date.now() - 200000, completed: false },
-            { id: 2, subject: 'Информатика', text: 'Лабораторная работа №3: спроектировать реляционную базу данных', deadline: '18.09.25', added: Date.now() - 100000, completed: false },
-            { id: 3, subject: 'Физика',      text: 'Задачи 4.12 — 4.18 в сборнике задач', deadline: '20.09.25', added: Date.now(), completed: false }
-        ];
     }
 
-    function saveHomeworkList(list) {
-        localStorage.setItem(HW_STORAGE_KEY, JSON.stringify(list));
+    function escapeHtml(str) {
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
     }
 
     function renderMainHomework() {
         if (!hwContainer) return;
-        const list = loadHomeworkList();
-
         hwContainer.innerHTML = '';
 
-        if (!list || list.length === 0) {
+        if (!homeHomeworks || homeHomeworks.length === 0) {
             hwContainer.innerHTML = '<p class="empty-state" style="color: #9AA0C3; font-size: 1.6rem; text-align: center; margin-top: 3rem;">Домашних заданий пока нет</p>';
             return;
         }
 
-        list.forEach(hw => {
+        homeHomeworks.forEach(hw => {
             const hwDiv = document.createElement('div');
             hwDiv.className = 'card-body-tasks-task';
             hwDiv.dataset.id = hw.id;
 
-            const isChecked = hw.completed ? 'checked' : '';
             const hasDeadline = hw.deadline ? 'has-deadline' : '';
-            const deadlineHtml = hw.deadline ? `<p>до ${hw.deadline}</p>` : '';
+            const deadlineHtml = hw.deadline ? `<p>до ${escapeHtml(hw.deadline)}</p>` : '';
             const titleFull = (hw.subject ? hw.subject + ': ' : '') + hw.text;
 
             hwDiv.innerHTML = `
-                <input type="checkbox" id="main_hw_${hw.id}" ${isChecked}>
+                <input type="checkbox" id="main_hw_${hw.id}">
                 <div class="task-text-content ${hasDeadline}">
-                    <label for="main_hw_${hw.id}" title="${titleFull}">
-                        <strong>${hw.subject ? hw.subject + ': ' : ''}</strong>${hw.text}
+                    <label for="main_hw_${hw.id}" title="${escapeHtml(titleFull)}">
+                        <strong>${hw.subject ? escapeHtml(hw.subject) + ': ' : ''}</strong>${escapeHtml(hw.text)}
                     </label>
                     ${deadlineHtml}
                 </div>
@@ -149,95 +148,167 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (hwContainer) {
         renderMainHomework();
-
-        // Отметка выполнения (чекбокс синхронизируется в localStorage)
-        hwContainer.addEventListener('change', function (e) {
-            if (e.target.matches('input[type="checkbox"]')) {
-                const taskCard = e.target.closest('.card-body-tasks-task');
-                if (!taskCard) return;
-                const id = Number(taskCard.dataset.id);
-                const list = loadHomeworkList();
-                const item = list.find(h => h.id === id);
-                if (item) {
-                    item.completed = e.target.checked;
-                    saveHomeworkList(list);
-                }
-            }
-        });
     }
 
-    // Быстрое добавление задания с главной страницы через Enter
-    if (hwInput) {
-        hwInput.addEventListener('keydown', function (e) {
-            if (e.key === 'Enter') {
-                const fullText = hwInput.value.trim();
-                if (fullText === '') return;
+    // Быстрое добавление ДЗ с главной страницы через Enter (в БД)
+    if (hwInput && hwContainer) {
+        hwInput.addEventListener('keydown', async function (e) {
+            if (e.key !== 'Enter') return;
+            const fullText = hwInput.value.trim();
+            if (fullText === '') return;
 
-                // Если пользователь ввёл "Химия: параграф 12", отделяем предмет
-                let subject = 'Задание';
-                let text = fullText;
-                if (fullText.includes(':')) {
-                    const parts = fullText.split(':');
-                    subject = parts[0].trim();
-                    text = parts.slice(1).join(':').trim();
-                }
+            let subject = 'Задание';
+            let text = fullText;
+            if (fullText.includes(':')) {
+                const parts = fullText.split(':');
+                subject = parts[0].trim() || 'Задание';
+                text = parts.slice(1).join(':').trim() || fullText;
+            }
 
-                const list = loadHomeworkList();
-                const newId = list.length > 0 ? Math.max(...list.map(h => h.id)) + 1 : 1;
+            const storeUrl = hwContainer.dataset.storeUrl || '/homework';
+            hwInput.value = '';
 
-                list.unshift({
-                    id: newId,
-                    subject: subject,
-                    text: text,
-                    deadline: null,
-                    added: Date.now(),
-                    completed: false
+            try {
+                const res = await fetch(storeUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        subject,
+                        description: text,
+                    }),
                 });
-
-                saveHomeworkList(list);
-                renderMainHomework();
-                hwInput.value = '';
+                if (!res.ok) return;
+                const data = await res.json();
+                if (data.homework) {
+                    homeHomeworks.unshift(data.homework);
+                    renderMainHomework();
+                }
+            } catch {
+                // ignore
             }
         });
     }
 
 
     // ==========================================
-    // 3. БЛОК "РАСПИСАНИЕ"
+    // 3. БЛОК "РАСПИСАНИЕ" (моковые данные)
     // ==========================================
     const prevDayBtn = document.querySelector('#prevDayBtn');
     const nextDayBtn = document.querySelector('#nextDayBtn');
     const currentDayText = document.querySelector('#currentDayText');
+    const homeScheduleList = document.querySelector('#homeScheduleList');
 
-    const daysList = [
-        '19 ноября, 2025 год (Среда)',
-        '20 ноября, 2025 год (Четверг)',
-        '21 ноября, 2025 год (Пятница)'
+    const scheduleDays = [
+        {
+            title: '16 ноября, 2026 год (Понедельник)',
+            lessons: [
+                { time: '14:15 — 15:50', subject: 'ПИРВП', classroom: '1-306', teacher: 'Евдокимов' },
+                { time: '16:10 — 17:45', subject: 'ПИРВП', classroom: '1-306', teacher: 'Евдокимов' },
+                { time: '17:55 — 19:30', subject: 'Стандартизация', classroom: '2-204', teacher: 'Сухорукова' }
+            ]
+        },
+        {
+            title: '17 ноября, 2026 год (Вторник)',
+            lessons: [
+                { time: '10:15 — 11:50', subject: 'ОВБП', classroom: '3-102', teacher: 'Бушуева' },
+                { time: '12:30 — 14:05', subject: 'ОВБП', classroom: '3-102', teacher: 'Бушуева' },
+                { time: '14:15 — 15:50', subject: 'Стандартизация', classroom: '2-204', teacher: 'Сухорукова' }
+            ]
+        },
+        {
+            title: '18 ноября, 2026 год (Среда)',
+            lessons: [
+                { time: '08:30 — 10:05', subject: 'Стандартизация', classroom: '2-204', teacher: 'Сухорукова' },
+                { time: '10:15 — 11:50', subject: 'ПИРВП', classroom: '1-306', teacher: 'Евдокимов' },
+                { time: '12:30 — 14:05', subject: 'ПИРВП', classroom: '1-306', teacher: 'Евдокимов' }
+            ]
+        },
+        {
+            title: '19 ноября, 2026 год (Четверг)',
+            lessons: [
+                { time: '12:30 — 14:05', subject: 'ОВБП', classroom: '3-102', teacher: 'Бушуева' },
+                { time: '14:15 — 15:50', subject: 'Стандартизация', classroom: '2-204', teacher: 'Сухорукова' },
+                { time: '16:10 — 17:45', subject: 'ПИРВП', classroom: '1-306', teacher: 'Евдокимов' }
+            ]
+        },
+        {
+            title: '20 ноября, 2026 год (Пятница)',
+            lessons: [
+                { time: '10:15 — 11:50', subject: 'ПИРВП', classroom: '1-306', teacher: 'Евдокимов' },
+                { time: '12:30 — 14:05', subject: 'ОВБП', classroom: '3-102', teacher: 'Бушуева' },
+                { time: '14:15 — 15:50', subject: 'ОВБП', classroom: '3-102', teacher: 'Бушуева' }
+            ]
+        }
     ];
-    let currentDayIndex = 1;
+    let currentDayIndex = 2;
 
-    if (prevDayBtn && nextDayBtn && currentDayText) {
+    function renderHomeSchedule(index) {
+        const dayData = scheduleDays[index];
+        if (!dayData || !currentDayText || !homeScheduleList) return;
+
+        currentDayText.textContent = dayData.title;
+
+        const timeIcon = homeScheduleList.dataset.timeIcon || '/media/time.svg';
+        const booksIcon = homeScheduleList.dataset.booksIcon || '/media/books.svg';
+        const classroomIcon = homeScheduleList.dataset.classroomIcon || '/media/chool.svg';
+        const teacherIcon = homeScheduleList.dataset.teacherIcon || '/media/teacher.svg';
+
+        homeScheduleList.innerHTML = dayData.lessons.map(lesson => `
+            <div class="shedule">
+                <div class="time">
+                    <img class="icons" src="${timeIcon}" alt="time">
+                    <p>Время: ${lesson.time}</p>
+                </div>
+                <div class="subject">
+                    <img class="icons" src="${booksIcon}" alt="subject">
+                    <p>Предмет: ${lesson.subject}</p>
+                </div>
+                <div class="classroom">
+                    <img class="icons" src="${classroomIcon}" alt="classroom">
+                    <p>Аудитория: ${lesson.classroom}</p>
+                </div>
+                <div class="teacher">
+                    <img class="icons" src="${teacherIcon}" alt="teacher">
+                    <p>Преподаватель: ${lesson.teacher}</p>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    if (prevDayBtn && nextDayBtn && currentDayText && homeScheduleList) {
+        renderHomeSchedule(currentDayIndex);
+
         prevDayBtn.addEventListener('click', function () {
             if (currentDayIndex > 0) {
                 currentDayIndex--;
-                currentDayText.textContent = daysList[currentDayIndex];
+                renderHomeSchedule(currentDayIndex);
             }
         });
 
         nextDayBtn.addEventListener('click', function () {
-            if (currentDayIndex < daysList.length - 1) {
+            if (currentDayIndex < scheduleDays.length - 1) {
                 currentDayIndex++;
-                currentDayText.textContent = daysList[currentDayIndex];
+                renderHomeSchedule(currentDayIndex);
             }
         });
     }
 
 
     // ==========================================
-    // 4. БЛОК "ЗАМЕТКИ"
+    // 4. БЛОК "ЗАМЕТКИ" (с сохранением в БД!)
     // ==========================================
     const noteInput = document.querySelector('#noteInput');
     const notesContainer = document.querySelector('#notesContainer');
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
 
     if (noteInput && notesContainer) {
         noteInput.addEventListener('keydown', function (e) {
@@ -245,17 +316,47 @@ document.addEventListener('DOMContentLoaded', function () {
                 const text = noteInput.value.trim();
                 if (text === '') return;
 
-                hideEmptyState(notesContainer);
+                fetch('/notes', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        title: text
+                    })
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error('Ошибка сохранения заметки');
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success && data.note) {
+                        hideEmptyState(notesContainer);
 
-                const noteDiv = document.createElement('div');
-                noteDiv.className = 'card-body-notes-note';
-                noteDiv.innerHTML = `
-                    <div class="title">Новая заметка</div>
-                    <div class="main-text">${text}</div>
-                `;
+                        const note = data.note;
+                        const noteLink = document.createElement('a');
+                        noteLink.href = '/notes';
+                        noteLink.className = 'card-body-notes-note';
 
-                notesContainer.prepend(noteDiv);
-                noteInput.value = '';
+                        const titleText = note.title || 'Без названия';
+                        const tmpDiv = document.createElement('div');
+                        tmpDiv.innerHTML = note.content || '';
+                        const plain = (tmpDiv.textContent || tmpDiv.innerText || '').trim() || 'Пустая заметка';
+
+                        noteLink.innerHTML = `
+                            <h3>${escapeHtml(titleText)}</h3>
+                            <p>${escapeHtml(plain.length > 70 ? plain.substring(0, 70) + '...' : plain)}</p>
+                        `;
+
+                        notesContainer.prepend(noteLink);
+                        noteInput.value = '';
+                    }
+                })
+                .catch(err => {
+                    console.error('Ошибка сохранения заметки:', err);
+                });
             }
         });
     }
@@ -431,22 +532,136 @@ document.addEventListener('DOMContentLoaded', function () {
     // 6. БЛОК "МОИ ФАЙЛЫ"
     // ==========================================
     const addFileBtn = document.querySelector('#addFileBtn');
+    const homeFileInput = document.querySelector('#homeFileInput');
     const filesContainer = document.querySelector('#filesContainer');
 
-    if (addFileBtn && filesContainer) {
-        addFileBtn.addEventListener('click', function () {
-            const fileName = prompt('Введите название файла (например: Презентация.pptx):');
-            if (fileName) {
-                hideEmptyState(filesContainer);
+    function showFilesEmptyState() {
+        if (!filesContainer) return;
+        if (filesContainer.querySelector('.onefile') || filesContainer.querySelector('.empty-state')) return;
+        const p = document.createElement('p');
+        p.className = 'empty-state';
+        p.style.cssText = 'color: #9AA0C3; font-size: 1.6rem; text-align: center; width: 100%; margin-top: 2rem;';
+        p.textContent = 'Файлы ещё не загружены';
+        filesContainer.appendChild(p);
+    }
 
-                const fileDiv = document.createElement('div');
-                fileDiv.className = 'onefile';
-                fileDiv.innerHTML = `
-                    <img class="icons" src="/media/file.svg" alt="file">
-                    <p>${fileName}</p>
-                    <img class="icons" src="/media/dots.svg" alt="dots" style="cursor: pointer;">
-                `;
-                filesContainer.prepend(fileDiv);
+    function createHomeFileCard(file) {
+        const fileIcon = filesContainer.dataset.fileIcon || '/media/fiels.svg';
+        const downloadIcon = filesContainer.dataset.downloadIcon || '/media/download.svg';
+        const deleteIcon = filesContainer.dataset.deleteIcon || '/media/delete.svg';
+
+        const fileDiv = document.createElement('div');
+        fileDiv.className = 'onefile';
+        fileDiv.dataset.fileId = String(file.id);
+        fileDiv.dataset.fileName = file.original_name;
+
+        const iconImg = document.createElement('img');
+        iconImg.className = 'icons';
+        iconImg.src = fileIcon;
+        iconImg.alt = 'file';
+
+        const nameP = document.createElement('p');
+        nameP.className = 'onefile-name';
+        nameP.title = file.original_name;
+        nameP.textContent = file.original_name;
+
+        const actions = document.createElement('div');
+        actions.className = 'onefile-actions';
+
+        const downloadLink = document.createElement('a');
+        downloadLink.href = file.download_url;
+        downloadLink.className = 'onefile-action-btn';
+        downloadLink.title = 'Скачать';
+        downloadLink.innerHTML = `<img class="icons" src="${downloadIcon}" alt="Скачать">`;
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.type = 'button';
+        deleteBtn.className = 'onefile-action-btn onefile-delete-btn';
+        deleteBtn.dataset.deleteUrl = file.delete_url;
+        deleteBtn.title = 'Удалить';
+        deleteBtn.innerHTML = `<img class="icons" src="${deleteIcon}" alt="Удалить">`;
+
+        actions.append(downloadLink, deleteBtn);
+        fileDiv.append(iconImg, nameP, actions);
+        return fileDiv;
+    }
+
+    if (addFileBtn && homeFileInput && filesContainer) {
+        const uploadUrl = filesContainer.dataset.uploadUrl || '/privateFiels';
+
+        addFileBtn.addEventListener('click', function () {
+            homeFileInput.click();
+        });
+
+        homeFileInput.addEventListener('change', async function () {
+            const selected = Array.from(homeFileInput.files || []);
+            if (selected.length === 0) return;
+
+            addFileBtn.disabled = true;
+
+            for (const file of selected) {
+                const formData = new FormData();
+                formData.append('file', file);
+
+                try {
+                    const response = await fetch(uploadUrl, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken,
+                            'Accept': 'application/json',
+                        },
+                        body: formData,
+                    });
+                    const data = await response.json().catch(() => ({}));
+                    if (response.ok && data.success && data.file) {
+                        hideEmptyState(filesContainer);
+                        filesContainer.prepend(createHomeFileCard(data.file));
+                    }
+                } catch (err) {
+                    console.error('Ошибка загрузки файла:', err);
+                }
+            }
+
+            homeFileInput.value = '';
+            addFileBtn.disabled = false;
+        });
+
+        filesContainer.addEventListener('click', async function (event) {
+            const deleteBtn = event.target.closest('.onefile-delete-btn');
+            if (!deleteBtn) return;
+
+            const row = deleteBtn.closest('.onefile');
+            const deleteUrl = deleteBtn.dataset.deleteUrl;
+            const fileName = row?.dataset.fileName || 'этот файл';
+            if (!row || !deleteUrl) return;
+
+            const confirmed = await confirmDelete({
+                title: 'Удалить файл?',
+                message: `Вы уверены, что хотите удалить «${fileName}»?`,
+                confirmText: 'Удалить',
+                cancelText: 'Отмена',
+            });
+
+            if (!confirmed) return;
+
+            deleteBtn.disabled = true;
+            try {
+                const response = await fetch(deleteUrl, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json',
+                    },
+                });
+                if (response.ok) {
+                    row.remove();
+                    showFilesEmptyState();
+                } else {
+                    deleteBtn.disabled = false;
+                }
+            } catch (err) {
+                deleteBtn.disabled = false;
+                console.error('Ошибка удаления файла:', err);
             }
         });
     }

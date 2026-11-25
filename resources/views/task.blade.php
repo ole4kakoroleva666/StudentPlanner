@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Задачи - StudentPlanner</title>
+    <title>Задачи – SP</title>
+    <link rel="icon" type="image/svg+xml" href="{{ asset('media/favicon.svg') }}">
     @vite(['resources/css/task.css', 'resources/js/task.js'])
 </head>
 
@@ -16,79 +17,133 @@
                 <img class="logotip" src="{{ asset('media/newlogo.svg') }}" alt="Логотип">
             </a>
             <a href="/">Главная</a>
-            <a href="/task">Задачи</a>
+            <a href="/task" class="active">Задачи</a>
             <a href="/calendar">Календарь</a>
             <a href="/homework">Домашнее задание</a>
             <a href="/shedule">Расписание</a>
             <a href="/notes">Заметки</a>
             <a href="/profile">Моё</a>
-            
-            <a href="/profile">
-                <img src="{{ asset('media/Profile.svg') }}" alt="Профиль">
-            </a>
+            @include('partials.header-avatar')
         </nav>
     </header>
 
     <main>
         <section>
             <div class="container">
+                <!-- Заголовок страницы со стрелкой назад -->
                 <div class="title">
-                    <a href="/">
+                    <a href="/" title="На главную">
                         <img src="{{ asset('media/back.svg') }}" alt="Назад">
                     </a>
                     <p>Задачи</p>
                 </div>
 
-                <div class="tasks-two-columns">
-                    <!-- Левая колонка: Список задач -->
-                    <div class="tasks-left">
-                        <div class="all-tasks" id="tasksContainer">
-                            @forelse($tasks as $task)
-                                <div class="all-tasks-task" data-id="{{ $task->id }}">
-                                    <input type="checkbox" id="task_{{ $task->id }}" {{ $task->is_completed ? 'checked' : '' }}>
-                                    <div class="task-text-content {{ $task->deadline ? 'has-deadline' : '' }}">
-                                        <div class="task-title-wrapper">
-                                            <label for="task_{{ $task->id }}" class="task-title" title="{{ $task->title }}">
-                                                {{ $task->title }}
-                                            </label>
-                                        </div>
-                                        @if($task->deadline)
-                                            <p class="task-deadline">до {{ \Carbon\Carbon::parse($task->deadline)->format('d.m.y') }}</p>
-                                        @endif
-                                    </div>
-                                    <div class="all-tasks-task-line"></div>
-                                </div>
-                            @empty
-                                <p class="empty-state" style="color: #9AA0C3; font-size: 1.6rem; text-align: center; margin-top: 3rem;">
-                                    У вас пока нет задач. Добавьте первую задачу в форме справа!
-                                </p>
-                            @endforelse
+                <!-- Верхний блок создания новой задачи -->
+                <div class="task-create-card">
+                    <form method="POST" action="{{ route('tasks.store') }}" id="addTaskForm" class="task-create-form">
+                        @csrf
+                        <div class="task-create-input-wrapper">
+                            <input type="text" name="task_text" id="taskTextInput" placeholder="Написать новую задачу..." required autocomplete="off">
                         </div>
-                    </div>
 
-                    <!-- Правая колонка: Форма добавления задачи -->
-                    <div class="tasks-right">
-                        <form method="POST" action="{{ route('tasks.store') }}" class="add-task-form" id="addTaskForm">
-                            @csrf
-                            
-                            <div class="new-task-input">
-                                <input type="text" name="task_text" id="taskTextInput" placeholder="Написать задачу..." required autocomplete="off">
+                        <div class="task-create-actions">
+                            <div class="task-deadline-picker" id="deadlinePickerBtn" title="Выбрать срок сдачи">
+                                <img src="{{ asset('media/calendar.svg') }}" alt="Календарь" class="deadline-icon">
+                                <input type="date" name="deadline" id="deadlineDate" class="hidden-date-input">
+                                <span class="deadline-text" id="deadlineDisplay">Срок сдачи</span>
+                                <button type="button" class="deadline-clear-btn" id="deadlineClearBtn" title="Сбросить срок">&times;</button>
                             </div>
 
-                            <div class="deadline-section">
-                                <div class="deadline-label">Срок сдачи</div>
-                                <div class="deadline-input-wrapper">
-                                    <label for="deadlineDate" class="deadline-icon-button" style="cursor: pointer;">
-                                        <img src="{{ asset('media/calendar.svg') }}" alt="Календарь">
+                            <button type="submit" class="task-submit-btn" id="addTaskSubmitBtn">
+                                <img src="{{ asset('media/plus.svg') }}" alt="Плюс">
+                                <span>Добавить</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Панель управления и фильтрации -->
+                <div class="tasks-toolbar">
+                    <div class="tasks-filters">
+                        <button type="button" class="tasks-filter-btn active" data-filter="todo">
+                            К выполнению (<span id="countTodo">{{ $tasks->where('status', 'todo')->count() }}</span>)
+                        </button>
+                        <button type="button" class="tasks-filter-btn" data-filter="in_progress">
+                            В работе (<span id="countInProgress">{{ $tasks->where('status', 'in_progress')->count() }}</span>)
+                        </button>
+                        <button type="button" class="tasks-filter-btn" data-filter="completed">
+                            Выполненные (<span id="countCompleted">{{ $tasks->where('status', 'completed')->count() }}</span>)
+                        </button>
+                        <button type="button" class="tasks-filter-btn" data-filter="all">
+                            Все (<span id="countAll">{{ $tasks->count() }}</span>)
+                        </button>
+                    </div>
+
+                    <div class="tasks-stats">
+                        Выполнено: <strong id="progressText">{{ $tasks->where('status', 'completed')->count() }} из {{ $tasks->count() }}</strong>
+                    </div>
+                </div>
+
+                <!-- Список задач (карточки с переключением статусов) -->
+                <div class="tasks-list" id="tasksContainer">
+                    @forelse($tasks as $task)
+                        @php
+                            $status = $task->status ?? ($task->is_completed ? 'completed' : 'todo');
+                        @endphp
+                        <div class="task-item {{ $status === 'completed' ? 'is-completed' : '' }} {{ $status === 'in_progress' ? 'is-in-progress' : '' }}" 
+                             data-id="{{ $task->id }}" 
+                             data-status="{{ $status }}">
+                            
+                            <div class="task-checkbox-wrapper">
+                                <input type="checkbox" id="task_{{ $task->id }}" class="task-checkbox" {{ $status === 'completed' ? 'checked' : '' }} title="{{ $status === 'completed' ? 'Вернуть в список' : 'Отметить как выполненную' }}">
+                            </div>
+
+                            <div class="task-body">
+                                <div class="task-title-row">
+                                    @if($status === 'in_progress')
+                                        <span class="task-status-badge in-progress">В работе</span>
+                                    @endif
+                                    <label for="task_{{ $task->id }}" class="task-text" title="{{ $task->title }}">
+                                        {{ $task->title }}
                                     </label>
-                                    <input type="date" name="deadline" id="deadlineDate" style="position: absolute; opacity: 0; pointer-events: none; width: 0; height: 0;">
-                                    <div class="deadline-display" id="deadlineDisplay" style="cursor: pointer;" title="Нажмите, чтобы выбрать срок сдачи">ДД.ММ.ГГ</div>
                                 </div>
                             </div>
 
-                            <button type="submit" class="add-task-button" id="addTaskSubmitBtn">Добавить</button>
-                        </form>
-                    </div>
+                            <div class="task-meta">
+                                @if($task->deadline)
+                                    <div class="task-deadline-badge" title="Срок сдачи">
+                                        <img src="{{ asset('media/calendar.svg') }}" alt="Календарь">
+                                        <span>до {{ \Carbon\Carbon::parse($task->deadline)->format('d.m.y') }}</span>
+                                    </div>
+                                @endif
+
+                                <!-- Кнопка смены статуса (В работу / Отложить) -->
+                                <div class="task-action-buttons">
+                                    @if($status === 'todo')
+                                        <button type="button" class="task-btn-status start" data-action="start" title="Взять в работу прямо сейчас">
+                                            <span>В работу</span>
+                                        </button>
+                                    @elseif($status === 'in_progress')
+                                        <button type="button" class="task-btn-status pause" data-action="pause" title="Отложить обратно в список">
+                                            <span>Отложить</span>
+                                        </button>
+                                    @elseif($status === 'completed')
+                                        <button type="button" class="task-btn-status restart" data-action="restart" title="Вернуть задачу в список">
+                                            <span>Вернуть</span>
+                                        </button>
+                                    @endif
+                                </div>
+
+                                <button type="button" class="task-delete-btn" title="Удалить задачу" data-id="{{ $task->id }}">
+                                    <img src="{{ asset('media/delete.svg') }}" alt="Удалить">
+                                </button>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="empty-state" id="emptyState">
+                            <p>У вас пока нет задач. Добавьте первую задачу в строке выше!</p>
+                        </div>
+                    @endforelse
                 </div>
             </div>
         </section>
@@ -113,7 +168,7 @@
                     <div class="footer-social">
                         <h4>Мы в соцсетях</h4>
                         <div class="social-icons">
-                            <img src="{{ asset('media/goglenew.svg') }}" alt="google">
+                            <img src="{{ asset('media/goglenew.svg') }}" alt="Google">
                             <img src="{{ asset('media/telegram.svg') }}" alt="Telegram">
                             <img src="{{ asset('media/vk.svg') }}" alt="VK">
                         </div>

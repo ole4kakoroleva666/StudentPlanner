@@ -313,3 +313,148 @@ body {
         max-width: 26rem;
     }
 }
+
+
+/* ==========================================
+   ПОП-АП ВОССТАНОВЛЕНИЯ ПАРОЛЯ И СООБЩЕНИЯ
+   ========================================== */
+.alert-success {
+    margin-top: 2rem;
+    padding: 1.2rem 2rem;
+    border-radius: 1rem;
+    background-color: #EBF7EE;
+    color: #2B7A4B;
+    font-size: 1.6rem;
+    text-align: center;
+}
+
+.forgot-backdrop {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(60, 62, 76, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    z-index: 1000;
+}
+
+.forgot-backdrop[hidden] {
+    display: none;
+}
+
+.forgot-modal {
+    width: 100%;
+    max-width: 48rem;
+    background-color: #FFFFFF;
+    border-radius: 2rem;
+    box-shadow: 0 20px 60px rgba(60, 62, 76, 0.25);
+    overflow: hidden;
+}
+
+.forgot-modal-head {
+    background-color: #BEC4E3;
+    padding: 1.6rem 2.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.forgot-modal-head h2 {
+    font-family: 'JostSemiBold', sans-serif;
+    font-size: 2.1rem;
+    color: #3C3E4C;
+}
+
+.forgot-modal-close {
+    background: transparent;
+    border: none;
+    font-size: 2.8rem;
+    line-height: 1;
+    color: #3C3E4C;
+    cursor: pointer;
+}
+
+.forgot-modal-body {
+    padding: 2.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+}
+
+.forgot-desc {
+    font-size: 1.5rem;
+    color: #64677E;
+    line-height: 1.45;
+}
+
+.forgot-input {
+    width: 100%;
+    padding: 1.2rem 1.6rem;
+    border-radius: 1rem;
+    border: 0.15rem solid #BEC4E3;
+    background-color: #F5F6FF;
+    font-size: 1.7rem;
+    color: #3C3E4C;
+}
+
+.forgot-input:focus {
+    background-color: #FFFFFF;
+    border-color: #636AA3;
+}
+
+.forgot-error {
+    font-size: 1.4rem;
+    color: #C84B5A;
+    min-height: 1.6rem;
+}
+
+.forgot-success {
+    padding: 1.2rem 1.4rem;
+    border-radius: 1rem;
+    background-color: #EBF7EE;
+    color: #2B7A4B;
+    font-size: 1.45rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.forgot-success[hidden] {
+    display: none;
+}
+
+.forgot-reset-link {
+    color: #636AA3;
+    font-family: "RobotoMedium", sans-serif;
+    font-size: 1.5rem;
+    text-decoration: underline;
+}
+
+.forgot-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+.forgot-btn-cancel,
+.forgot-btn-submit {
+    padding: 1rem 2rem;
+    border-radius: 1rem;
+    font-size: 1.6rem;
+    cursor: pointer;
+}
+
+.forgot-btn-cancel {
+    background-color: #E6E7F6;
+    color: #3C3E4C;
+}
+
+.forgot-btn-submit {
+    background-color: #636AA3;
+    color: #FFFFFF;
+}
+
+.forgot-btn-submit:hover {
+    background-color: #4f5691;
+}

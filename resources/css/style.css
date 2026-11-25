@@ -335,6 +335,10 @@
 /* ==========================================
    КАРТОЧКА 4: РАСПИСАНИЕ
    ========================================== */
+.card-body-shedule {
+  cursor: default;
+}
+
 .sheduleheader {
   display: flex;
   justify-content: space-between;
@@ -362,19 +366,34 @@
   transform: scale(1);
 }
 
+.sheduleheader .data {
+  font-family: "RobotoMedium", sans-serif;
+  font-size: 1.7rem;
+  color: #3C3E4C;
+  text-align: center;
+}
+
+.time,
 .teacher,
 .classroom,
 .subject {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.8rem;
   font-family: "RobotoRegular", sans-serif;
-  font-size: 1.5rem;
+  font-size: 1.6rem;
+  color: #3C3E4C;
+  line-height: 1.35;
 }
 
+.time img,
+.subject img,
+.classroom img,
 .teacher img {
   width: 1.6rem;
   height: 1.6rem;
+  flex-shrink: 0;
+  margin-top: 0.25rem;
 }
 
 .shedule {
@@ -409,6 +428,8 @@
 }
 
 .card-body-notes-note {
+  display: block;
+  text-decoration: none;
   border: 1px solid #BEC4E3;
   border-radius: 1.2rem;
   padding: 1.4rem;
@@ -416,12 +437,19 @@
   box-sizing: border-box;
   background-color: #F8F9FE;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  word-break: break-word;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+  outline: none;
 }
 
 .card-body-notes-note:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(190, 196, 227, 0.4);
+  border-color: #9AA0C3;
+  background-color: #F2F4FC;
+}
+
+.card-body-notes-note:focus,
+.card-body-notes-note:active {
+  outline: none;
 }
 
 .card-body-notes-note h3 {
@@ -476,13 +504,53 @@
   gap: 1.2rem;
   border: 1px solid #BEC4E3;
   border-radius: 1rem;
-  padding: 1.4rem;
+  padding: 1.2rem 1.4rem;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
-.onefile>p {
+.onefile:hover {
+  border-color: #636AA3;
+  background-color: #F8F9FF;
+}
+
+.onefile>p,
+.onefile-name {
   font-size: 1.4rem;
   font-family: "RobotoRegular", sans-serif;
   color: #3C3E4C;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.onefile-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.onefile-action-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  width: 2.8rem;
+  height: 2.8rem;
+  border-radius: 0.7rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+}
+
+.onefile-action-btn:hover {
+  background-color: #E7EAFA;
+}
+
+.onefile-delete-btn:hover {
+  background-color: #FEECEC;
 }
 
 .icons {
@@ -520,14 +588,31 @@
   }
 }
 
+@media (max-width: 768px) {
+  .card {
+    height: auto;
+  }
+
+  .card-body-tasks,
+  .shedules,
+  .card-body-notes,
+  .card-body-files {
+    max-height: none;
+    overflow-y: visible;
+    padding-right: 0;
+  }
+}
+
 @media (max-width: 600px) {
   .card {
     width: 100%;
     height: auto;
+    min-height: 36rem;
   }
 
   .card-body {
     height: auto;
+    min-width: 0;
   }
 
   .card-body-input {
@@ -538,6 +623,7 @@
   .card-body-input > input,
   .card-body-input > button {
     width: 100%;
+    max-width: 100%;
   }
 
   .card-body-notes-note {

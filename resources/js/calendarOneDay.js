@@ -1,3 +1,5 @@
+import { confirmDelete } from './confirmModal';
+
 document.addEventListener('DOMContentLoaded', function () {
     const oneDayDateText = document.querySelector('#oneDayDateText');
     const oneDayWeekText = document.querySelector('#oneDayWeekText');
@@ -7,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const dayNoteInput = document.querySelector('#dayNoteInput');
     const notesList = document.querySelector('#notesList');
     const hwList = document.querySelector('#hwList');
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
 
     const monthNamesGenitive = [
         'января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
@@ -17,9 +20,6 @@ document.addEventListener('DOMContentLoaded', function () {
         'Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'
     ];
 
-    // ========================================================
-    // 1. СЧИТЫВАНИЕ ДАТЫ ИЗ URL (?date=YYYY-MM-DD)
-    // ========================================================
     const urlParams = new URLSearchParams(window.location.search);
     const dateParam = urlParams.get('date');
 
@@ -33,200 +33,218 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const fullDateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 
-    // Отображаем дату и день недели в шапке
     if (oneDayDateText) {
         oneDayDateText.textContent = `${day} ${monthNamesGenitive[month]}`;
     }
     if (oneDayWeekText) {
         oneDayWeekText.textContent = weekDayNames[dayOfWeek];
     }
-
-    // Кнопка «Назад» возвращает в календарь именно к этому месяцу
     if (backToCalendarBtn) {
         backToCalendarBtn.href = `/calendar?date=${fullDateStr}`;
     }
 
-    // ========================================================
-    // 2. ПОЛУЧЕНИЕ И ОТРИСОВКА РАСПИСАНИЯ (ЗАДЕЛ ПОД API)
-    // ========================================================
-    async function fetchDaySchedule(dateStr) {
-        // Воскресенье — пар нет
-        if (dayOfWeek === 0) {
-            return [];
-        }
-
-        // ВРЕМЕННЫЕ МОК-ДАННЫЕ:
-        return [
-            {
-                time: "08:30 — 10:05",
-                subject: "Математический анализ",
-                classroom: "2-204",
-                teacher: "Иванова Ольга Сергеевна"
-            },
-            {
-                time: "10:15 — 11:50",
-                subject: "Проектирование и разработка интерфейсов",
-                classroom: "1-306",
-                teacher: "Гунько Григорий Александрович"
-            },
-            {
-                time: "12:30 — 14:05",
-                subject: "Базы данных",
-                classroom: "3-102",
-                teacher: "Смирнов Алексей Викторович"
-            },
-            {
-                time: "14:15 — 15:50",
-                subject: "Компьютерные сети",
-                classroom: "2-110",
-                teacher: "Кузнецов Дмитрий Павлович"
-            }
-        ];
-
-        // КОГДА БУДЕТ ГОТОВО API (Сетевой Город / Laravel):
-        // const res = await fetch(`/api/schedule/day?date=${dateStr}`);
-        // return await res.json();
+    function escapeHtml(str) {
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
     }
 
-    async function renderLessons() {
-        if (!lessonsContainer) return;
+    let dayNotes = [];
+    let dayHomework = [];
 
-        const lessons = await fetchDaySchedule(fullDateStr);
+    function renderLessons(lessons) {
+        if (!lessonsContainer) return;
         lessonsContainer.innerHTML = '';
 
         if (!lessons || lessons.length === 0) {
             lessonsContainer.innerHTML = `
                 <div style="text-align: center; padding: 4rem 1rem; color: #9AA0C3; font-size: 1.8rem; font-family: 'RobotoRegular';">
-                    🎉 В этот день занятий нет
+                    В этот день занятий нет
                 </div>
             `;
             return;
         }
 
-        lessons.forEach(lesson => {
+        lessons.forEach((lesson) => {
             const lessonDiv = document.createElement('div');
             lessonDiv.className = 'onelesson';
             lessonDiv.innerHTML = `
                 <div class="time">
                     <img class="icons" src="/media/time.svg" alt="time" />
-                    <p>Время: ${lesson.time}</p>
+                    <p>Время: ${escapeHtml(lesson.time)}</p>
                 </div>
                 <div class="subject">
                     <img class="icons" src="/media/books.svg" alt="subject" />
-                    <p>Предмет: ${lesson.subject}</p>
+                    <p>Предмет: ${escapeHtml(lesson.subject)}</p>
                 </div>
                 <div class="classroom">
                     <img class="icons" src="/media/chool.svg" alt="classroom" />
-                    <p>Аудитория: ${lesson.classroom}</p>
+                    <p>Аудитория: ${escapeHtml(lesson.classroom)}</p>
                 </div>
                 <div class="teacher">
                     <img class="icons" src="/media/teacher.svg" alt="teacher" />
-                    <p>Преподаватель: ${lesson.teacher}</p>
+                    <p>Преподаватель: ${escapeHtml(lesson.teacher)}</p>
                 </div>
             `;
             lessonsContainer.appendChild(lessonDiv);
         });
     }
 
-    renderLessons();
+    function renderDayNotes() {
+        if (!notesList) return;
+        notesList.innerHTML = '';
 
-    // ========================================================
-    // 3. ДОБАВЛЕНИЕ ЗАМЕТОК ЧЕРЕЗ ПОЛЕ ВВОДА (ПО КЛАВИШЕ ENTER)
-    // ========================================================
-    if (dayNoteInput && notesList) {
-        dayNoteInput.addEventListener('keydown', function (e) {
-            if (e.key === 'Enter') {
-                const text = dayNoteInput.value.trim();
-                if (text === '') return;
-
-                const newId = 'note_' + Date.now();
-                const noteDiv = document.createElement('div');
-                noteDiv.className = 'note-task';
-                noteDiv.innerHTML = `
-                    <input type="checkbox" id="${newId}">
-                    <label for="${newId}">${text}</label>
-                `;
-
-                // Вставляем заметку наверх списка
-                notesList.prepend(noteDiv);
-
-                // Очищаем поле ввода
-                dayNoteInput.value = '';
-            }
-        });
-    }
-
-    // ========================================================
-    // 4. СИНХРОНИЗАЦИЯ ДОМАШНЕГО ЗАДАНИЯ С ОБЩИМ СПИСКОМ
-    // ========================================================
-    const HW_STORAGE_KEY = 'studentplanner_homework';
-
-    function loadDayHomework() {
-        const raw = localStorage.getItem(HW_STORAGE_KEY);
-        if (raw) {
-            try { return JSON.parse(raw); } catch (e) { /* ignore */ }
+        if (dayNotes.length === 0) {
+            notesList.innerHTML = '<p style="color: #9AA0C3; font-size: 1.5rem; text-align: center; padding: 2rem 0;">На этот день заметок нет</p>';
+            return;
         }
-        return [
-            { id: 1, subject: 'Математика',  text: 'Страница 83 учить правило, распечатать правило', completed: false },
-            { id: 2, subject: 'Информатика', text: 'Лабораторная работа №3: спроектировать реляционную базу данных', completed: false },
-            { id: 3, subject: 'Физика',      text: 'Задачи 4.12 — 4.18 в сборнике задач', completed: false }
-        ];
+
+        dayNotes.forEach((note) => {
+            const noteDiv = document.createElement('div');
+            noteDiv.className = 'note-task';
+            noteDiv.dataset.id = note.id;
+
+            const isChecked = note.completed ? 'checked' : '';
+            noteDiv.innerHTML = `
+                <input type="checkbox" id="day_note_${note.id}" ${isChecked}>
+                <label for="day_note_${note.id}">${escapeHtml(note.text)}</label>
+                <button type="button" class="day-note-delete" title="Удалить заметку">×</button>
+            `;
+            notesList.appendChild(noteDiv);
+        });
     }
 
     function renderDayHomework() {
         if (!hwList) return;
-        const list = loadDayHomework();
         hwList.innerHTML = '';
 
-        if (!list || list.length === 0) {
-            hwList.innerHTML = '<p style="color: #9AA0C3; font-size: 1.5rem; text-align: center; padding: 2rem 0;">Заданий пока нет</p>';
+        if (dayHomework.length === 0) {
+            hwList.innerHTML = '<p style="color: #9AA0C3; font-size: 1.5rem; text-align: center; padding: 2rem 0;">На этот день заданий нет</p>';
             return;
         }
 
-        list.forEach(hw => {
+        dayHomework.forEach((hw) => {
             const hwItem = document.createElement('div');
             hwItem.className = 'homework-task';
             hwItem.dataset.id = hw.id;
 
-            const isChecked = hw.completed ? 'checked' : '';
             const titleFull = (hw.subject ? hw.subject + ': ' : '') + hw.text;
-
             hwItem.innerHTML = `
-                <input type="checkbox" id="day_hw_${hw.id}" ${isChecked}>
-                <label for="day_hw_${hw.id}">${titleFull}</label>
+                <input type="checkbox" id="day_hw_${hw.id}">
+                <label for="day_hw_${hw.id}">${escapeHtml(titleFull)}</label>
             `;
             hwList.appendChild(hwItem);
         });
     }
 
-    if (hwList) {
-        renderDayHomework();
+    async function loadDayData() {
+        try {
+            const res = await fetch(`/calendar/day?date=${fullDateStr}`, {
+                headers: { 'Accept': 'application/json' },
+            });
+            if (!res.ok) return;
+            const data = await res.json();
+            renderLessons(data.lessons || []);
+            dayHomework = data.homeworks || [];
+            dayNotes = data.notes || [];
+            renderDayHomework();
+            renderDayNotes();
+        } catch {
+            renderLessons([]);
+            renderDayHomework();
+            renderDayNotes();
+        }
+    }
 
-        hwList.addEventListener('change', function (e) {
-            if (e.target.matches('input[type="checkbox"]')) {
-                const itemDiv = e.target.closest('.homework-task');
-                if (!itemDiv) return;
-                const id = Number(itemDiv.dataset.id);
-                const list = loadDayHomework();
-                const item = list.find(h => h.id === id);
-                if (item) {
-                    item.completed = e.target.checked;
-                    localStorage.setItem(HW_STORAGE_KEY, JSON.stringify(list));
+    if (dayNoteInput && notesList) {
+        dayNoteInput.addEventListener('keydown', async function (e) {
+            if (e.key !== 'Enter') return;
+            e.preventDefault();
+            const text = dayNoteInput.value.trim();
+            if (!text) return;
+
+            dayNoteInput.value = '';
+
+            try {
+                const res = await fetch('/calendar/day-notes', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        date: fullDateStr,
+                        content: text,
+                    }),
+                });
+                if (!res.ok) return;
+                const data = await res.json();
+                if (data.note) {
+                    dayNotes.push(data.note);
+                    renderDayNotes();
                 }
+            } catch {
+                // ignore
+            }
+        });
+
+        notesList.addEventListener('change', async function (e) {
+            if (!e.target.matches('input[type="checkbox"]')) return;
+            const itemDiv = e.target.closest('.note-task');
+            if (!itemDiv) return;
+            const id = Number(itemDiv.dataset.id);
+
+            try {
+                await fetch(`/calendar/day-notes/${id}/toggle`, {
+                    method: 'PATCH',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json',
+                    },
+                });
+                const target = dayNotes.find((n) => n.id === id);
+                if (target) target.completed = e.target.checked;
+            } catch {
+                // ignore
+            }
+        });
+
+        notesList.addEventListener('click', async function (e) {
+            const delBtn = e.target.closest('.day-note-delete');
+            if (!delBtn) return;
+            const itemDiv = delBtn.closest('.note-task');
+            if (!itemDiv) return;
+            const id = Number(itemDiv.dataset.id);
+            const target = dayNotes.find((n) => n.id === id);
+
+            const confirmed = await confirmDelete({
+                title: 'Удалить заметку?',
+                message: target
+                    ? `Вы уверены, что хотите удалить заметку «${target.text}»?`
+                    : 'Вы уверены, что хотите удалить эту заметку?',
+            });
+            if (!confirmed) return;
+
+            try {
+                const res = await fetch(`/calendar/day-notes/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json',
+                    },
+                });
+                if (res.ok) {
+                    dayNotes = dayNotes.filter((n) => n.id !== id);
+                    renderDayNotes();
+                }
+            } catch {
+                // ignore
             }
         });
     }
 
-    // Чекбоксы заметок (зачеркивание)
-    if (notesList) {
-        notesList.addEventListener('change', function (e) {
-            if (e.target.matches('input[type="checkbox"]')) {
-                const label = e.target.parentElement.querySelector('label');
-                if (label) {
-                    label.style.textDecoration = e.target.checked ? 'line-through' : 'none';
-                    label.style.color = e.target.checked ? '#9AA0C3' : '#3C3E4C';
-                }
-            }
-        });
-    }
+    loadDayData();
 });

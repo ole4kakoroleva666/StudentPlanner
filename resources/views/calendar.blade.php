@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StudentPlanner — Календарь</title>
+    <title>Календарь – SP</title>
+    <link rel="icon" type="image/svg+xml" href="{{ asset('media/favicon.svg') }}">
     @vite(['resources/css/calendar.css', 'resources/js/calendar.js'])
 </head>
 
@@ -16,14 +17,12 @@
             </a>
             <a href="/">Главная</a>
             <a href="/task">Задачи</a>
-            <a href="/calendar">Календарь</a>
+            <a href="/calendar" class="active">Календарь</a>
             <a href="/homework">Домашнее задание</a>
             <a href="/shedule">Расписание</a>
             <a href="/notes">Заметки</a>
             <a href="/privateFiels">Моё</a>
-            <a href="/profile">
-                <img src="{{ asset('media/Profile.svg') }}" alt="Профиль">
-            </a>
+            @include('partials.header-avatar')
         </nav>
     </header>
 
@@ -31,22 +30,24 @@
         <section>
             <div class="container">
                 <div class="title">
-                    <a href="/" style="display: flex; align-items: center;">
-                        <img src="{{ asset('media/back.svg') }}" alt="back">
+                    <a href="/" id="backBtn" title="На главную">
+                        <img src="{{ asset('media/back.svg') }}" alt="Назад">
                     </a>
-                    <p>Расписание</p>
+                    <p>Календарь</p>
                 </div>
 
                 <!-- Шапка календаря со стрелками и выбором месяца/года -->
                 <div class="month-controls">
-                    <button type="button" class="calendar-page-btn" id="calPrevBtn" aria-label="Предыдущий месяц">‹</button>
-                    
-                    <div class="calendar-page-selects">
-                        <select class="calendar-page-select" id="calMonthSelect" aria-label="Выбор месяца"></select>
-                        <select class="calendar-page-select" id="calYearSelect" aria-label="Выбор года"></select>
-                    </div>
+                    <div class="calendar-page-nav">
+                        <button type="button" class="calendar-page-btn" id="calPrevBtn" aria-label="Предыдущий месяц">‹</button>
+                        
+                        <div class="calendar-page-selects">
+                            <select class="calendar-page-select" id="calMonthSelect" aria-label="Выбор месяца"></select>
+                            <select class="calendar-page-select" id="calYearSelect" aria-label="Выбор года"></select>
+                        </div>
 
-                    <button type="button" class="calendar-page-btn" id="calNextBtn" aria-label="Следующий месяц">›</button>
+                        <button type="button" class="calendar-page-btn" id="calNextBtn" aria-label="Следующий месяц">›</button>
+                    </div>
                 </div>
 
                 <div class="calendar-wrapper">

@@ -4,223 +4,516 @@ body {
     background-color: #F5F6FF;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* ==========================================
+   СЕТКА ПРОФИЛЯ В СТИЛЕ КАРТОЧЕК САЙТА
+   ========================================== */
+.profile-layout {
+    max-width: 112rem;
+    margin: 0 auto 10rem auto;
+    display: grid;
+    grid-template-columns: 35rem 1fr;
+    gap: 3.6rem;
+    align-items: stretch;
 }
 
-.title {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-}
-
-.title>img {
-    width: 5.3rem;
-    height: 5.3rem;
-    position: absolute;
-    inset-block-start: 14.8rem;
-    inset-inline-start: 28.8rem;
-}
-
-.title>p {
-    font-size: 3.6rem;
-    font-family: 'JostSemiBold';
-    color: #3C3E4C;
-    margin-bottom: 9.4rem;
-}
-
-.field {
-    margin-bottom: 3rem;
-}
-
-.field-header {
-    display: flex;
-    justify-content: space-between;
-    max-width: 76.4rem;
-    align-items: baseline;
-    margin-bottom: 1rem;
-}
-
-.field-name {
-    font-family: "RobotoRegular";
-    font-size: 2.4rem;
-    color: #3C3E4C;
-}
-
-.field-edit {
-    font-family: "RobotoRegular";
-    font-size: 2rem;
-    color: #3C3E4C;
-    background: none;
-    border: none;
-    cursor: pointer;
-}
-
-.field-line {
-    height: 0.1rem;
-    background-color: #3C3E4C;
-    width: 76.4rem;
-    margin-bottom: 7.2rem;
-}
-
-.information-profile {
-    display: flex;
-    gap: 20rem;
-}
-
-button {
-    font-size: 2.6rem;
-    color: #3C3E4C;
-    font-family: "RobotoRegular";
-    background-color: #ffffff;
-    border-radius: 1rem;
-    padding: 0.5rem 2.1rem;
-    cursor: pointer;
-}
-
-.exit {
-    font-size: 2.6rem;
-    color: #FFF;
-    font-family: "RobotoRegular";
-    background-color: #636AA3;
-    border-radius: 1rem;
-    padding: 0.5rem 2.1rem;
-    cursor: pointer;
-    margin-bottom: 10.2rem;
-}
-
-.profile-right {
-    width: 30rem;
+.profile-sidebar,
+.profile-main {
     display: flex;
     flex-direction: column;
 }
 
-.profile-card {
-    background-color: #fff;
-    box-shadow: 15px 25px 50px #E6E7F6;
+.profile-identity-card,
+.profile-main > .sp-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.sp-card {
+    background-color: #FFFFFF;
     border-radius: 2rem;
-    padding: 6.3rem 5.3rem;
+    box-shadow: 20px 20px 60px #E6E7F6;
+    overflow: hidden;
+}
+
+.sp-card-head {
+    background-color: #BEC4E3;
+    height: 6rem;
+    display: flex;
+    align-items: center;
+    padding: 0 2.8rem;
+    flex-shrink: 0;
+}
+
+.sp-card-head h2 {
+    font-size: 2.3rem;
+    font-family: 'JostSemiBold', sans-serif;
+    color: #3C3E4C;
+}
+
+.sp-card-body {
+    padding: 2.4rem 2.8rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1.6rem;
+    flex: 1;
+}
+
+/* ==========================================
+   ЛЕВАЯ КАРТОЧКА: ВИЗИТКА СТУДЕНТА
+   ========================================== */
+.profile-identity-card {
+    position: relative;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.profile-identity-card.is-dragover {
+    box-shadow: 0 0 0 0.3rem #636AA3, 20px 20px 60px #E6E7F6;
+    transform: translateY(-0.2rem);
+}
+
+.identity-banner {
+    height: 6rem;
+    background-color: #BEC4E3;
+    flex-shrink: 0;
+}
+
+.identity-avatar-wrap {
+    display: flex;
+    justify-content: center;
+    margin-top: -3.6rem;
+    position: relative;
+    z-index: 2;
+}
+
+.avatar-input-hidden {
+    position: absolute;
+    width: 0.1rem;
+    height: 0.1rem;
+    opacity: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.avatar-circle {
+    width: 13rem;
+    height: 13rem;
+    border-radius: 50%;
+    background-color: #F5F6FF;
+    border: 0.5rem solid #FFFFFF;
+    box-shadow: 0 10px 25px rgba(99, 106, 163, 0.22);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    cursor: pointer;
+}
+
+.avatar-circle > img {
+    width: 7.4rem;
+    height: 7.4rem;
+    object-fit: contain;
+    transition: transform 0.25s ease;
+}
+
+.avatar-circle > img.is-custom {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.avatar-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(60, 62, 76, 0.55);
+    color: #FFFFFF;
+    font-family: "RobotoRegular", sans-serif;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.avatar-circle:hover .avatar-overlay {
+    opacity: 1;
+}
+
+.identity-body {
+    padding: 1.6rem 2.4rem 2.6rem;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    height: 29.7rem;
-}
-
-.profile-card>img {
-    width: 19.2rem;
-    height: 17.1rem;
-    object-fit: contain;
+    text-align: center;
+    flex: 1;
 }
 
 .profile-nickname {
-    font-family: "RobotoRegular";
-    font-size: 2.4rem;
+    font-family: "JostSemiBold", sans-serif;
+    font-size: 2.5rem;
     color: #3C3E4C;
-    margin-top: 1.5rem;
-    text-align: center;
+    word-break: break-word;
 }
 
-@media (max-width: 1280px) {
-    html {
-        font-size: 60%;
-    }
-
-    .information-profile {
-        gap: 10rem;
-    }
+.profile-group-badge {
+    display: inline-block;
+    margin-top: 0.6rem;
+    padding: 0.4rem 1.2rem;
+    background-color: #F5F6FF;
+    border: 0.1rem solid #CFD3EB;
+    color: #636AA3;
+    border-radius: 99rem;
+    font-size: 1.4rem;
+    font-family: "RobotoMedium", sans-serif;
 }
 
+.profile-group-badge.is-hidden {
+    display: none;
+}
+
+.profile-joined {
+    font-size: 1.35rem;
+    color: #9AA0C3;
+    margin-top: 0.6rem;
+}
+
+.avatar-controls {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.8rem;
+    width: 100%;
+    justify-content: center;
+}
+
+.avatar-btn-upload,
+.avatar-btn-delete {
+    font-family: "RobotoRegular", sans-serif;
+    font-size: 1.5rem;
+    border-radius: 1rem;
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.avatar-btn-upload {
+    background-color: #636AA3;
+    color: #FFFFFF;
+}
+
+.avatar-btn-upload:hover {
+    background-color: #4f5691;
+}
+
+.avatar-btn-delete {
+    background-color: #FFFFFF;
+    color: #C84B5A;
+    border: 0.1rem solid #E6CAD0;
+}
+
+.avatar-btn-delete:hover {
+    background-color: #FDF2F4;
+}
+
+.avatar-btn-delete[hidden] {
+    display: none;
+}
+
+.avatar-hint {
+    font-size: 1.25rem;
+    color: #9AA0C3;
+    margin-top: 0.8rem;
+}
+
+.stats-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 2.2rem;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    padding: 1.1rem 0.6rem;
+    background-color: #F8F9FE;
+    border: 0.1rem solid #E6E7F6;
+    border-radius: 1.4rem;
+}
+
+.stat-value {
+    font-family: "JostSemiBold", sans-serif;
+    font-size: 1.9rem;
+    color: #636AA3;
+}
+
+.stat-label {
+    font-size: 1.2rem;
+    color: #64677E;
+}
+
+.exit-form {
+    width: 100%;
+    margin-top: auto;
+    padding-top: 2.2rem;
+}
+
+.exit {
+    width: 100%;
+    font-size: 1.6rem;
+    color: #C84B5A;
+    font-family: "RobotoRegular", sans-serif;
+    background-color: #FFFFFF;
+    border: 0.1rem solid #E6CAD0;
+    border-radius: 1.2rem;
+    padding: 1rem 2rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.exit:hover {
+    background-color: #FDF2F4;
+}
+
+/* ==========================================
+   ПРАВАЯ КОЛОНКА: ПЛАШКИ ДАННЫХ (БЕЗ ЛИНИЙ)
+   ========================================== */
+.profile-main {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+.info-tile {
+    background-color: #F8F9FE;
+    border: 0.1rem solid #E6E7F6;
+    border-radius: 1.4rem;
+    padding: 1.6rem 2rem;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.info-tile:hover {
+    border-color: #CFD3EB;
+}
+
+.info-tile.is-editing {
+    background-color: #FFFFFF;
+    border-color: #636AA3;
+    box-shadow: 0 6px 20px rgba(99, 106, 163, 0.08);
+}
+
+.tile-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.6rem;
+}
+
+.tile-meta {
+    min-width: 0;
+    flex: 1;
+}
+
+.tile-label {
+    display: block;
+    font-size: 1.35rem;
+    color: #9AA0C3;
+    margin-bottom: 0.4rem;
+}
+
+.tile-value {
+    font-family: "RobotoRegular", sans-serif;
+    font-size: 1.8rem;
+    color: #3C3E4C;
+    word-break: break-word;
+    white-space: pre-line;
+}
+
+.tile-value.is-empty {
+    color: #9AA0C3;
+    font-style: italic;
+}
+
+.tile-edit-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: "RobotoRegular", sans-serif;
+    font-size: 1.5rem;
+    color: #636AA3;
+    background-color: #FFFFFF;
+    border: 0.1rem solid #CFD3EB;
+    border-radius: 1rem;
+    padding: 0.65rem 1.2rem;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.tile-edit-btn img {
+    width: 1.6rem;
+    height: 1.6rem;
+    object-fit: contain;
+}
+
+.tile-edit-btn:hover {
+    background-color: #E6E7F6;
+    border-color: #BEC4E3;
+}
+
+.tile-edit-btn[hidden] {
+    display: none;
+}
+
+/* Инлайн-редактор внутри плашки */
+.field-editor {
+    margin-top: 1.2rem;
+}
+
+.field-editor[hidden] {
+    display: none;
+}
+
+.field-input {
+    width: 100%;
+    font-family: "RobotoRegular", sans-serif;
+    font-size: 1.7rem;
+    color: #3C3E4C;
+    background-color: #F8F9FE;
+    border: 0.1rem solid #BEC4E3;
+    border-radius: 1.1rem;
+    padding: 1.1rem 1.4rem;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.field-input:focus {
+    background-color: #FFFFFF;
+    border-color: #636AA3;
+}
+
+.field-textarea {
+    resize: vertical;
+    min-height: 8.5rem;
+}
+
+.password-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.field-error {
+    font-size: 1.4rem;
+    color: #C84B5A;
+    margin-top: 0.6rem;
+    min-height: 1.6rem;
+}
+
+.field-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.6rem;
+}
+
+.field-save,
+.field-cancel {
+    font-family: "RobotoRegular", sans-serif;
+    font-size: 1.55rem;
+    border-radius: 1rem;
+    padding: 0.8rem 1.8rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.field-save {
+    background-color: #636AA3;
+    color: #FFFFFF;
+}
+
+.field-save:hover {
+    background-color: #4f5691;
+}
+
+.field-save:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+.field-cancel {
+    background-color: #E6E7F6;
+    color: #3C3E4C;
+}
+
+.field-cancel:hover {
+    background-color: #CFD3EB;
+}
+
+/* ==========================================
+   TOAST УВЕДОМЛЕНИЕ
+   ========================================== */
+.profile-toast {
+    position: fixed;
+    bottom: 3rem;
+    right: 3rem;
+    background-color: #636AA3;
+    color: #FFFFFF;
+    font-size: 1.6rem;
+    padding: 1.2rem 2rem;
+    border-radius: 1.2rem;
+    box-shadow: 0 10px 30px rgba(60, 62, 76, 0.2);
+    opacity: 0;
+    transform: translateY(1rem);
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    z-index: 1000;
+}
+
+.profile-toast.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.profile-toast.is-error {
+    background-color: #C84B5A;
+}
+
+/* ==========================================
+   АДАПТИВНОСТЬ
+   ========================================== */
 @media (max-width: 1024px) {
-    html {
-        font-size: 58%;
-    }
-
-    .information-profile {
-        gap: 22rem;
-    }
-
-    .field-header,
-    .field-line {
-        max-width: 100%;
-        width: 100%;
+    .profile-layout {
+        grid-template-columns: 31rem 1fr;
+        gap: 2.6rem;
     }
 }
 
 @media (max-width: 768px) {
-    html {
-        font-size: 56%;
-    }
-
-    .title>img {
-        width: 4rem;
-        height: 4rem;
-        inset-block-start: 12rem;
-        inset-inline-start: 2rem;
-    }
-
-    .title>p {
+    .profile-layout {
+        grid-template-columns: 1fr;
+        gap: 2.8rem;
         margin-bottom: 6rem;
     }
 
-    .information-profile {
-        flex-direction: column-reverse;
-        gap: 5rem;
-        align-items: center;
-    }
-
-    .profile-right {
-        width: 100%;
-        align-items: center;
-    }
-
-    .profile-card {
-        width: 100%;
-        max-width: 32rem;
-    }
-
-    .profile-fields {
-        width: 100%;
-    }
-
-    .field-header {
-        align-items: center;
-    }
-
-    .field-name {
-        font-size: 2.2rem;
-    }
-
-    .field-edit {
-        font-size: 1.8rem;
-    }
-
-    .exit {
-        display: block;
-        margin: 6rem auto 8rem;
+    .tile-top {
+        align-items: flex-start;
     }
 }
 
 @media (max-width: 480px) {
-    html {
-        font-size: 54%;
+    .sp-card-body {
+        padding: 1.8rem;
     }
 
-    .title>p {
-        font-size: 2.8rem;
-        text-align: center;
+    .tile-top {
+        flex-direction: column;
+        align-items: flex-start;
     }
 
-    .profile-card {
-        padding: 4rem 3rem;
-        height: auto;
-    }
-
-    .profile-card>img {
-        width: 15rem;
-        height: auto;
+    .tile-edit-btn {
+        align-self: flex-start;
     }
 }

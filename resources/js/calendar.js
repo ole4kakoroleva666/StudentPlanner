@@ -37,22 +37,32 @@ document.addEventListener('DOMContentLoaded', function () {
         calYearSelect.appendChild(option);
     }
 
+    function normalizeDateToISO(deadlineStr) {
+        if (!deadlineStr) return null;
+        const s = String(deadlineStr).trim();
+        if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+        const parts = s.split('.');
+        if (parts.length === 3) {
+            const [d, m, y] = parts;
+            const fullYear = y.length === 2 ? '20' + y : y;
+            return `${fullYear}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`;
+        }
+        return null;
+    }
+
     // ========================================================
-    // ФУНКЦИЯ ПОЛУЧЕНИЯ СОБЫТИЙ (ГОТОВА ПОД БУДУЩЕЕ API)
+    // ФУНКЦИЯ ПОЛУЧЕНИЯ СОБЫТИЙ (РЕАЛЬНЫЕ ДАННЫЕ ПО ДНЯМ ИЗ БД)
     // ========================================================
     async function fetchCalendarEvents(year, month) {
-        // ВРЕМЕННЫЕ МОК-ДАННЫЕ:
-        // Формат: "ГГГГ-ММ-ДД": { lessons: число_пар, homework: число_дз }
-        const padMonth = String(month + 1).padStart(2, '0');
-        return {
-            [`${year}-${padMonth}-04`]: { lessons: 1, homework: 0 },
-            [`${year}-${padMonth}-16`]: { lessons: 1, homework: 1 },
-            [`${year}-${padMonth}-20`]: { lessons: 2, homework: 3 }
-        };
-
-        // КОГДА БУДЕТ ГОТОВО API (Сетевой Город / Laravel):
-        // const res = await fetch(`/api/calendar/events?year=${year}&month=${month + 1}`);
-        // return await res.json();
+        try {
+            const res = await fetch(`/calendar/events?year=${year}&month=${month + 1}`, {
+                headers: { 'Accept': 'application/json' }
+            });
+            if (!res.ok) return {};
+            return await res.json();
+        } catch {
+            return {};
+        }
     }
 
     // ========================================================

@@ -6,7 +6,19 @@ document.addEventListener('DOMContentLoaded', function () {
     const taskTextInput = document.querySelector('#taskTextInput');
     const deadlineDate = document.querySelector('#deadlineDate');
     const deadlineDisplay = document.querySelector('#deadlineDisplay');
-    const deadlineIcon = document.querySelector('.deadline-icon-button');
+    const deadlinePickerBtn = document.querySelector('#deadlinePickerBtn');
+    const deadlineClearBtn = document.querySelector('#deadlineClearBtn');
+
+    // Счётчики
+    const countAll = document.querySelector('#countAll');
+    const countTodo = document.querySelector('#countTodo');
+    const countInProgress = document.querySelector('#countInProgress');
+    const countCompleted = document.querySelector('#countCompleted');
+    const progressText = document.querySelector('#progressText');
+
+    // Фильтры
+    const filterButtons = document.querySelectorAll('.tasks-filter-btn');
+    let currentFilter = 'todo'; // По умолчанию показываем только задачи "К выполнению"!
 
     function escapeHtml(text) {
         const div = document.createElement('div');
@@ -15,53 +27,89 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function hideEmptyState() {
-        if (!tasksContainer) return;
-        const empty = tasksContainer.querySelector('.empty-state');
+        const empty = document.querySelector('#emptyState');
         if (empty) empty.remove();
     }
 
-    // 1. Проверка длинного текста и добавление кнопки "Читать далее"
-    function setupReadMoreButtons() {
+    function showEmptyStateIfNeeded() {
         if (!tasksContainer) return;
-        const wrappers = tasksContainer.querySelectorAll('.task-title-wrapper');
+        const visibleTasks = Array.from(tasksContainer.querySelectorAll('.task-item')).filter(
+            el => el.style.display !== 'none'
+        );
+        let empty = document.querySelector('#emptyState');
 
-        wrappers.forEach(wrapper => {
-            if (wrapper.querySelector('.read-more-btn')) return;
-
-            const title = wrapper.querySelector('.task-title');
-            if (!title) return;
-
-            // Если реальная высота содержимого больше видимой высоты 2 строк
-            if (title.scrollHeight > title.clientHeight + 1) {
-                const btn = document.createElement('button');
-                btn.type = 'button';
-                btn.className = 'read-more-btn';
-                btn.textContent = 'Читать далее';
-
-                btn.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-
-                    title.classList.toggle('is-expanded');
-                    if (title.classList.contains('is-expanded')) {
-                        btn.textContent = 'Свернуть';
-                    } else {
-                        btn.textContent = 'Читать далее';
-                    }
-                });
-
-                wrapper.appendChild(btn);
+        if (visibleTasks.length === 0) {
+            if (!empty) {
+                empty = document.createElement('div');
+                empty.className = 'empty-state';
+                empty.id = 'emptyState';
+                let msg = 'В этой категории пока нет задач.';
+                if (currentFilter === 'todo') msg = 'Все задачи распределены! Добавьте новую задачу выше.';
+                if (currentFilter === 'in_progress') msg = 'Сейчас ничего нет в работе. Нажмите «В работу» на любой задаче!';
+                if (currentFilter === 'completed') msg = 'Выполненных задач пока нет.';
+                empty.innerHTML = `<p>${msg}</p>`;
+                tasksContainer.appendChild(empty);
             }
-        });
+        } else {
+            if (empty) empty.remove();
+        }
     }
 
-    // Инициализируем кнопки для существующих задач
-    setupReadMoreButtons();
+    // Обновление счётчиков задач
+    function updateCounters() {
+        if (!tasksContainer) return;
+        const allTasks = tasksContainer.querySelectorAll('.task-item');
+        let todo = 0;
+        let inProgress = 0;
+        let completed = 0;
 
-    // При изменении размеров окна перепроверяем необходимость кнопок
-    window.addEventListener('resize', setupReadMoreButtons);
+        allTasks.forEach(task => {
+            const st = task.dataset.status;
+            if (st === 'completed') completed++;
+            else if (st === 'in_progress') inProgress++;
+            else todo++;
+        });
 
-    // 2. Выбор даты (срок сдачи)
+        const total = allTasks.length;
+
+        if (countAll) countAll.textContent = total;
+        if (countTodo) countTodo.textContent = todo;
+        if (countInProgress) countInProgress.textContent = inProgress;
+        if (countCompleted) countCompleted.textContent = completed;
+        if (progressText) progressText.textContent = `${completed} из ${total}`;
+    }
+
+    // Применение текущего фильтра
+    function applyFilter(filter) {
+        currentFilter = filter;
+        const tasks = tasksContainer.querySelectorAll('.task-item');
+
+        tasks.forEach(task => {
+            const status = task.dataset.status;
+            if (filter === 'all') {
+                task.style.display = 'flex';
+            } else if (filter === 'todo') {
+                task.style.display = (status === 'todo') ? 'flex' : 'none';
+            } else if (filter === 'in_progress') {
+                task.style.display = (status === 'in_progress') ? 'flex' : 'none';
+            } else if (filter === 'completed') {
+                task.style.display = (status === 'completed') ? 'flex' : 'none';
+            }
+        });
+
+        showEmptyStateIfNeeded();
+    }
+
+    // Переключение табов фильтров
+    filterButtons.forEach(btn => {
+        btn.addEventListener('click', function () {
+            filterButtons.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            applyFilter(this.dataset.filter);
+        });
+    });
+
+    // 1. Выбор даты (срок сдачи)
     function openDatePicker() {
         if (!deadlineDate) return;
         if (typeof deadlineDate.showPicker === 'function') {
@@ -72,13 +120,9 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    if (deadlineDisplay) {
-        deadlineDisplay.addEventListener('click', openDatePicker);
-    }
-
-    if (deadlineIcon) {
-        deadlineIcon.addEventListener('click', function (e) {
-            e.preventDefault();
+    if (deadlinePickerBtn) {
+        deadlinePickerBtn.addEventListener('click', function (e) {
+            if (e.target === deadlineClearBtn) return;
             openDatePicker();
         });
     }
@@ -91,15 +135,29 @@ document.addEventListener('DOMContentLoaded', function () {
                     const day = parts[2];
                     const month = parts[1];
                     const year = parts[0].slice(-2);
-                    deadlineDisplay.textContent = `${day}.${month}.${year}`;
+                    deadlineDisplay.textContent = `до ${day}.${month}.${year}`;
+                    deadlinePickerBtn.classList.add('has-date');
                 }
             } else {
-                deadlineDisplay.textContent = 'ДД.ММ.ГГ';
+                resetDeadlinePicker();
             }
         });
     }
 
-    // 3. Добавление новой задачи через AJAX
+    function resetDeadlinePicker() {
+        if (deadlineDate) deadlineDate.value = '';
+        if (deadlineDisplay) deadlineDisplay.textContent = 'Срок сдачи';
+        if (deadlinePickerBtn) deadlinePickerBtn.classList.remove('has-date');
+    }
+
+    if (deadlineClearBtn) {
+        deadlineClearBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            resetDeadlinePicker();
+        });
+    }
+
+    // 2. Создание новой задачи через AJAX
     if (addTaskForm) {
         addTaskForm.addEventListener('submit', function (e) {
             e.preventDefault();
@@ -123,9 +181,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 })
             })
             .then(response => {
-                if (!response.ok) {
-                    throw new Error('Ошибка сервера при добавлении задачи');
-                }
+                if (!response.ok) throw new Error('Ошибка сервера при добавлении задачи');
                 return response.json();
             })
             .then(data => {
@@ -134,51 +190,223 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     const task = data.task;
                     const taskDiv = document.createElement('div');
-                    taskDiv.className = 'all-tasks-task';
+                    taskDiv.className = 'task-item';
                     taskDiv.dataset.id = task.id;
+                    taskDiv.dataset.status = 'todo';
 
-                    const hasDeadlineClass = task.deadline_formatted ? 'has-deadline' : '';
                     const deadlineHtml = task.deadline_formatted
-                        ? `<p class="task-deadline">до ${escapeHtml(task.deadline_formatted)}</p>`
+                        ? `<div class="task-deadline-badge" title="Срок сдачи">
+                               <img src="/media/calendar.svg" alt="Календарь">
+                               <span>до ${escapeHtml(task.deadline_formatted)}</span>
+                           </div>`
                         : '';
 
                     taskDiv.innerHTML = `
-                        <input type="checkbox" id="task_${task.id}">
-                        <div class="task-text-content ${hasDeadlineClass}">
-                            <div class="task-title-wrapper">
-                                <label for="task_${task.id}" class="task-title" title="${escapeHtml(task.title)}">${escapeHtml(task.title)}</label>
-                            </div>
-                            ${deadlineHtml}
+                        <div class="task-checkbox-wrapper">
+                            <input type="checkbox" id="task_${task.id}" class="task-checkbox" title="Отметить как выполненную">
                         </div>
-                        <div class="all-tasks-task-line"></div>
+                        <div class="task-body">
+                            <div class="task-title-row">
+                                <label for="task_${task.id}" class="task-text" title="${escapeHtml(task.title)}">
+                                    ${escapeHtml(task.title)}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="task-meta">
+                            ${deadlineHtml}
+                            <div class="task-action-buttons">
+                                <button type="button" class="task-btn-status start" data-action="start" title="Взять в работу прямо сейчас">
+                                    <span>В работу</span>
+                                </button>
+                            </div>
+                            <button type="button" class="task-delete-btn" title="Удалить задачу" data-id="${task.id}">
+                                <img src="/media/delete.svg" alt="Удалить">
+                            </button>
+                        </div>
                     `;
 
                     tasksContainer.prepend(taskDiv);
-                    setupReadMoreButtons();
 
-                    // Очистка полей формы
+                    // Очистка формы
                     taskTextInput.value = '';
-                    if (deadlineDate) deadlineDate.value = '';
-                    if (deadlineDisplay) deadlineDisplay.textContent = 'ДД.ММ.ГГ';
+                    resetDeadlinePicker();
                     taskTextInput.focus();
+
+                    updateCounters();
+                    applyFilter(currentFilter);
                 }
             })
             .catch(err => {
                 console.error('Ошибка сохранения задачи:', err);
-                // Если AJAX почему-то дал сбой, отправляем форму традиционным способом
                 addTaskForm.submit();
             });
         });
     }
 
-    // 4. Переключение статуса выполнения задачи (чекбокс)
-    if (tasksContainer) {
-        tasksContainer.addEventListener('change', function (e) {
-            if (e.target.matches('input[type="checkbox"]')) {
-                const taskDiv = e.target.closest('.all-tasks-task');
-                const taskId = taskDiv ? taskDiv.dataset.id : null;
+    // Вспомогательная функция обновления карточки при смене статуса
+    function updateTaskCardStatus(taskItem, newStatus) {
+        taskItem.dataset.status = newStatus;
+        taskItem.classList.toggle('is-completed', newStatus === 'completed');
+        taskItem.classList.toggle('is-in-progress', newStatus === 'in_progress');
 
-                if (taskId) {
+        const checkbox = taskItem.querySelector('.task-checkbox');
+        if (checkbox) checkbox.checked = (newStatus === 'completed');
+
+        // Бейдж "В процессе"
+        const titleRow = taskItem.querySelector('.task-title-row');
+        let inProgressBadge = titleRow ? titleRow.querySelector('.task-status-badge') : null;
+
+        if (newStatus === 'in_progress') {
+            if (!inProgressBadge && titleRow) {
+                inProgressBadge = document.createElement('span');
+                inProgressBadge.className = 'task-status-badge in-progress';
+                inProgressBadge.textContent = 'В работе';
+                titleRow.prepend(inProgressBadge);
+            }
+        } else {
+            if (inProgressBadge) inProgressBadge.remove();
+        }
+
+        // Кнопка действия (В работу / Отложить / Вернуть)
+        const actionWrapper = taskItem.querySelector('.task-action-buttons');
+        if (actionWrapper) {
+            if (newStatus === 'todo') {
+                actionWrapper.innerHTML = `
+                    <button type="button" class="task-btn-status start" data-action="start" title="Взять в работу прямо сейчас">
+                        <span>В работу</span>
+                    </button>
+                `;
+            } else if (newStatus === 'in_progress') {
+                actionWrapper.innerHTML = `
+                    <button type="button" class="task-btn-status pause" data-action="pause" title="Отложить обратно в список">
+                        <span>Отложить</span>
+                    </button>
+                `;
+            } else if (newStatus === 'completed') {
+                actionWrapper.innerHTML = `
+                    <button type="button" class="task-btn-status restart" data-action="restart" title="Вернуть задачу в список">
+                        <span>Вернуть</span>
+                    </button>
+                `;
+            }
+        }
+
+        updateCounters();
+
+        // Если текущий фильтр не совпадает со статусом — плавно скрываем карточку
+        if (currentFilter !== 'all') {
+            const shouldHide = (
+                (currentFilter === 'todo' && newStatus !== 'todo') ||
+                (currentFilter === 'in_progress' && newStatus !== 'in_progress') ||
+                (currentFilter === 'completed' && newStatus !== 'completed')
+            );
+
+            if (shouldHide) {
+                taskItem.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+                taskItem.style.opacity = '0';
+                taskItem.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    taskItem.style.display = 'none';
+                    taskItem.style.opacity = '';
+                    taskItem.style.transform = '';
+                    showEmptyStateIfNeeded();
+                }, 250);
+            }
+        }
+    }
+
+    // 3. Обработка кликов внутри списка (кнопки статуса + удаление)
+    if (tasksContainer) {
+        tasksContainer.addEventListener('click', function (e) {
+            // Клик по кнопке действия ("В работу" / "Отложить" / "Вернуть")
+            const actionBtn = e.target.closest('.task-btn-status');
+            if (actionBtn) {
+                const taskItem = actionBtn.closest('.task-item');
+                const taskId = taskItem ? taskItem.dataset.id : null;
+                const action = actionBtn.dataset.action;
+
+                let nextStatus = 'todo';
+                if (action === 'start') nextStatus = 'in_progress';
+                if (action === 'pause') nextStatus = 'todo';
+                if (action === 'restart') nextStatus = 'todo';
+
+                if (taskId && taskItem) {
+                    fetch(`/tasks/${taskId}/status`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken,
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({ status: nextStatus })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            updateTaskCardStatus(taskItem, data.status);
+                        }
+                    })
+                    .catch(err => console.error('Ошибка изменения статуса:', err));
+                }
+                return;
+            }
+
+            // Клик по кнопке "Удалить"
+            const deleteBtn = e.target.closest('.task-delete-btn');
+            if (deleteBtn) {
+                const taskId = deleteBtn.dataset.id;
+                const taskItem = deleteBtn.closest('.task-item');
+
+                if (taskId && taskItem) {
+                    deleteBtn.style.pointerEvents = 'none';
+                    taskItem.style.opacity = '0.3';
+                    taskItem.style.transform = 'scale(0.96)';
+
+                    fetch(`/tasks/${taskId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken,
+                            'Accept': 'application/json'
+                        }
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            taskItem.style.transition = 'all 0.25s ease';
+                            taskItem.style.height = '0';
+                            taskItem.style.padding = '0';
+                            taskItem.style.margin = '0';
+                            taskItem.style.opacity = '0';
+                            setTimeout(() => {
+                                taskItem.remove();
+                                updateCounters();
+                                showEmptyStateIfNeeded();
+                            }, 250);
+                        } else {
+                            taskItem.style.opacity = '1';
+                            taskItem.style.transform = 'none';
+                            deleteBtn.style.pointerEvents = 'auto';
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Ошибка удаления задачи:', err);
+                        taskItem.style.opacity = '1';
+                        taskItem.style.transform = 'none';
+                        deleteBtn.style.pointerEvents = 'auto';
+                    });
+                }
+                return;
+            }
+        });
+
+        // 4. Переключение статуса чекбоксом (галочкой)
+        tasksContainer.addEventListener('change', function (e) {
+            if (e.target.matches('.task-checkbox')) {
+                const taskItem = e.target.closest('.task-item');
+                const taskId = taskItem ? taskItem.dataset.id : null;
+
+                if (taskId && taskItem) {
                     fetch(`/tasks/${taskId}/toggle`, {
                         method: 'PATCH',
                         headers: {
@@ -186,11 +414,20 @@ document.addEventListener('DOMContentLoaded', function () {
                             'X-CSRF-TOKEN': csrfToken,
                             'Accept': 'application/json'
                         }
-                    }).catch(err => {
-                        console.error('Ошибка обновления статуса задачи:', err);
-                    });
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            updateTaskCardStatus(taskItem, data.status);
+                        }
+                    })
+                    .catch(err => console.error('Ошибка переключения чекбокса:', err));
                 }
             }
         });
     }
+
+    // Инициализация при первой загрузке страницы:
+    updateCounters();
+    applyFilter('todo'); // Показываем сразу список текущих дел "К выполнению"
 });

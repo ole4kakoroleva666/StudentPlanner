@@ -4,7 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StudentPlanner — Добавить домашнее задание</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Новое ДЗ – SP</title>
+    <link rel="icon" type="image/svg+xml" href="{{ asset('media/favicon.svg') }}">
     @vite(['resources/css/homeworkNew.css', 'resources/js/homeworkNew.js'])
 </head>
 
@@ -21,9 +23,7 @@
             <a href="/shedule">Расписание</a>
             <a href="/notes">Заметки</a>
             <a href="/privateFiels">Моё</a>
-            <a href="/profile">
-                <img src="{{ asset('media/Profile.svg') }}" alt="Профиль">
-            </a>
+            @include('partials.header-avatar')
         </nav>
     </header>
 
@@ -38,7 +38,9 @@
                 </div>
 
                 <div class="create-homework-card">
-                    <form id="newHomeworkForm">
+                    <form id="newHomeworkForm"
+                          data-store-url="{{ route('homework.store') }}"
+                          data-subjects='@json($subjects ?? [])'>
                         <div class="create-homework">
                             <!-- Поле: Предмет -->
                             <div class="one-section">

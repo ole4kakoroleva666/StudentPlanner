@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>StudentPlanner — Главная</title>
+    <title>Главная – SP</title>
+    <link rel="icon" type="image/svg+xml" href="{{ asset('media/favicon.svg') }}">
     @vite(['resources/css/style.css', 'resources/js/index.js'])
 </head>
 
@@ -26,9 +27,7 @@
             <a href="/notes">Заметки</a>
             <a href="/profile">Моё</a>
 
-            <a href="/profile">
-                <img src="{{ asset('media/Profile.svg') }}" alt="Профиль">
-            </a>
+            @include('partials.header-avatar')
         </nav>
     </header>
 
@@ -123,7 +122,10 @@
                                 <input type="text" id="hwInput" placeholder="Добавить домашнее задание...">
                             </div>
 
-                            <div class="card-body-tasks" id="hwContainer">
+                            <div class="card-body-tasks"
+                                 id="hwContainer"
+                                 data-homeworks='@json($homeworksData ?? [])'
+                                 data-store-url="{{ route('homework.store') }}">
                                 <p class="empty-state" style="color: #9AA0C3; font-size: 1.6rem; text-align: center; margin-top: 3rem;">Домашних заданий пока нет</p>
                             </div>
                         </div>
@@ -143,74 +145,15 @@
 
                                 <div class="sheduleheader">
                                     <a id="prevDayBtn" style="cursor: pointer;">Вчера</a>
-                                    <p class="data" id="currentDayText">20 ноября, 2025 год (Четверг)</p>
+                                    <p class="data" id="currentDayText">18 ноября, 2026 год (Среда)</p>
                                     <a id="nextDayBtn" style="cursor: pointer;">Завтра</a>
                                 </div>
-                                <div class="shedules">
-                                    <div class="shedule">
-                                        <div class="time">
-                                            <img class="icons" src="{{ asset('media/time.svg') }}" alt="time">
-                                            <p>Время: 14:15 — 15:50</p>
-                                        </div>
-                                        <div class="subject">
-                                            <img class="icons" src="{{ asset('media/books.svg') }}" alt="subject">
-                                            <p>Предмет: Проектирование и разработка интерфейсов</p>
-                                        </div>
-
-                                        <div class="classroom">
-                                            <img class="icons" src="{{ asset('media/chool.svg') }}" alt="classroom">
-                                            <p>Аудитория: 1-306</p>
-                                        </div>
-
-                                        <div class="teacher">
-                                            <img class="icons" src="{{ asset('media/teacher.svg') }}" alt="teacher">
-                                            <p>Преподаватель: Гунько Григорий Александрович</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="shedule">
-                                        <div class="time">
-                                            <img class="icons" src="{{ asset('media/time.svg') }}" alt="time">
-                                            <p>Время: 16:10 — 17:45</p>
-                                        </div>
-
-                                        <div class="subject">
-                                            <img class="icons" src="{{ asset('media/books.svg') }}" alt="subject">
-                                            <p>Предмет: Проектирование и разработка интерфейсов</p>
-                                        </div>
-
-                                        <div class="classroom">
-                                            <img class="icons" src="{{ asset('media/chool.svg') }}" alt="classroom">
-                                            <p>Аудитория: 1-306</p>
-                                        </div>
-
-                                        <div class="teacher">
-                                            <img class="icons" src="{{ asset('media/teacher.svg') }}" alt="teacher">
-                                            <p>Преподаватель: Гунько Григорий Александрович</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="shedule">
-                                        <div class="time">
-                                            <img class="icons" src="{{ asset('media/time.svg') }}" alt="time">
-                                            <p>Время: 17:55 — 19:30</p>
-                                        </div>
-
-                                        <div class="subject">
-                                            <img class="icons" src="{{ asset('media/books.svg') }}" alt="subject">
-                                            <p>Предмет: Базы данных и SQL</p>
-                                        </div>
-
-                                        <div class="classroom">
-                                            <img class="icons" src="{{ asset('media/chool.svg') }}" alt="classroom">
-                                            <p>Аудитория: 2-412</p>
-                                        </div>
-
-                                        <div class="teacher">
-                                            <img class="icons" src="{{ asset('media/teacher.svg') }}" alt="teacher">
-                                            <p>Преподаватель: Иванова Светлана Павловна</p>
-                                        </div>
-                                    </div>
+                                <div class="shedules" id="homeScheduleList"
+                                    data-lessons='@json($scheduleData ?? [])'
+                                    data-time-icon="{{ asset('media/time.svg') }}"
+                                    data-books-icon="{{ asset('media/books.svg') }}"
+                                    data-classroom-icon="{{ asset('media/chool.svg') }}"
+                                    data-teacher-icon="{{ asset('media/teacher.svg') }}">
                                 </div>
                             </div>
                         </div>
@@ -231,7 +174,14 @@
                             </div>
 
                             <div class="card-body-notes" id="notesContainer">
-                                <p class="empty-state" style="color: #9AA0C3; font-size: 1.6rem; text-align: center; width: 100%; margin-top: 3rem;">Заметок пока нет</p>
+                                @forelse($notes ?? [] as $note)
+                                    <a href="/notes" class="card-body-notes-note">
+                                        <h3>{{ $note->title ?: 'Без названия' }}</h3>
+                                        <p>{{ Str::limit(trim(strip_tags($note->content)), 70, '...') ?: 'Пустая заметка' }}</p>
+                                    </a>
+                                @empty
+                                    <p class="empty-state" style="color: #9AA0C3; font-size: 1.6rem; text-align: center; width: 100%; margin-top: 3rem;">Заметок пока нет</p>
+                                @endforelse
                             </div>
                         </div>
                     </div>
@@ -247,14 +197,35 @@
 
                         <div class="card-body">
                             <div>
-                                <button class="card-body-input-plus" id="addFileBtn">
+                                <input type="file" id="homeFileInput" hidden multiple>
+                                <button type="button" class="card-body-input-plus" id="addFileBtn">
                                     <img class="icons" src="{{ asset('media/plus.svg') }}" alt="Добавить">
                                     Добавить
                                 </button>
                             </div>
 
-                            <div class="card-body-files" id="filesContainer">
-                                <p class="empty-state" style="color: #9AA0C3; font-size: 1.6rem; text-align: center; width: 100%; margin-top: 2rem;">Файлы ещё не загружены</p>
+                            <div class="card-body-files"
+                                 id="filesContainer"
+                                 data-upload-url="{{ route('private-files.store') }}"
+                                 data-file-icon="{{ asset('media/fiels.svg') }}"
+                                 data-download-icon="{{ asset('media/download.svg') }}"
+                                 data-delete-icon="{{ asset('media/delete.svg') }}">
+                                @forelse($files ?? [] as $file)
+                                    <div class="onefile" data-file-id="{{ $file->id }}" data-file-name="{{ $file->original_name }}">
+                                        <img class="icons" src="{{ asset('media/fiels.svg') }}" alt="file">
+                                        <p class="onefile-name" title="{{ $file->original_name }}">{{ $file->original_name }}</p>
+                                        <div class="onefile-actions">
+                                            <a href="{{ route('private-files.download', $file) }}" class="onefile-action-btn" title="Скачать">
+                                                <img class="icons" src="{{ asset('media/download.svg') }}" alt="Скачать">
+                                            </a>
+                                            <button type="button" class="onefile-action-btn onefile-delete-btn" data-delete-url="{{ route('private-files.destroy', $file) }}" title="Удалить">
+                                                <img class="icons" src="{{ asset('media/delete.svg') }}" alt="Удалить">
+                                            </button>
+                                        </div>
+                                    </div>
+                                @empty
+                                    <p class="empty-state" style="color: #9AA0C3; font-size: 1.6rem; text-align: center; width: 100%; margin-top: 2rem;">Файлы ещё не загружены</p>
+                                @endforelse
                             </div>
                         </div>
                     </div>

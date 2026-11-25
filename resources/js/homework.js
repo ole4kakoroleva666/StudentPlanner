@@ -1,43 +1,26 @@
-document.addEventListener('DOMContentLoaded', function () {
+import { confirmDelete } from './confirmModal';
 
-    const STORAGE_KEY = 'studentplanner_homework';
-    const SORT_KEY    = 'studentplanner_hw_sort';
+document.addEventListener('DOMContentLoaded', function () {
+    const SORT_KEY = 'studentplanner_hw_sort';
 
     const homeworkList = document.querySelector('#homeworkList');
-    const sortBtns     = document.querySelectorAll('.hw-sort-btn');
-    const searchInput  = document.querySelector('#hwSearchInput');
+    const sortBtns = document.querySelectorAll('.hw-sort-btn');
+    const searchInput = document.querySelector('#hwSearchInput');
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
 
     if (!homeworkList) return;
 
-    // ========================================================
-    // ДАННЫЕ: читаем / пишем из localStorage
-    // ========================================================
-    function loadHomework() {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        return raw ? JSON.parse(raw) : getDefaultHomework();
+    let allHomeworks = [];
+    try {
+        allHomeworks = JSON.parse(homeworkList.dataset.homeworks || '[]') || [];
+    } catch {
+        allHomeworks = [];
     }
 
-    function saveHomework(list) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-    }
-
-    function getDefaultHomework() {
-        const defaults = [
-            { id: 1, subject: 'Математика',  text: 'Страница 83 учить правило, распечатать правило', deadline: '15.09.25', added: Date.now() - 200000, fileName: null, fileData: null },
-            { id: 2, subject: 'Информатика', text: 'Лабораторная работа №3: спроектировать реляционную базу данных', deadline: '18.09.25', added: Date.now() - 100000, fileName: null, fileData: null },
-            { id: 3, subject: 'Физика',      text: 'Задачи 4.12 — 4.18 в сборнике задач', deadline: '20.09.25', added: Date.now(), fileName: null, fileData: null },
-        ];
-        saveHomework(defaults);
-        return defaults;
-    }
-
-    // ========================================================
-    // СОРТИРОВКА: По дедлайну / По добавлению
-    // ========================================================
     let currentSort = localStorage.getItem(SORT_KEY) || 'deadline';
 
     function parseDeadline(str) {
-        if (!str) return new Date(9999, 11, 31); // без дедлайна — в конец
+        if (!str) return new Date(9999, 11, 31);
         const parts = str.split('.');
         if (parts.length !== 3) return new Date(9999, 11, 31);
         const [d, m, y] = parts;
@@ -47,146 +30,151 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function sortHomework(list) {
         if (currentSort === 'deadline') {
-            // Ближайшие сроки выше
             return [...list].sort((a, b) => parseDeadline(a.deadline) - parseDeadline(b.deadline));
-        } else if (currentSort === 'added') {
-            // Новые добавленные выше
+        }
+        if (currentSort === 'added') {
             return [...list].sort((a, b) => (b.added || 0) - (a.added || 0));
         }
         return list;
     }
 
-    // ========================================================
-    // ПОИСК
-    // ========================================================
     function filterHomework(list) {
         const query = searchInput ? searchInput.value.trim().toLowerCase() : '';
         if (!query) return list;
-        return list.filter(hw =>
-            hw.subject.toLowerCase().includes(query) ||
-            hw.text.toLowerCase().includes(query)
+        return list.filter(
+            (hw) =>
+                hw.subject.toLowerCase().includes(query) ||
+                hw.text.toLowerCase().includes(query)
         );
     }
 
-    // ========================================================
-    // ОТРИСОВКА КАРТОЧЕК
-    // ========================================================
     function renderHomework() {
-        const all    = loadHomework();
-        const sorted = sortHomework(filterHomework(all));
-
+        const sorted = sortHomework(filterHomework(allHomeworks));
         homeworkList.innerHTML = '';
 
         if (sorted.length === 0) {
             const q = searchInput ? searchInput.value.trim() : '';
-            homeworkList.innerHTML = `
-                <div class="empty-state">
-                    ${q ? 'Ничего не найдено по запросу «' + q + '»' : '🎉 Все домашние задания выполнены!'}
-                </div>
-            `;
+            const empty = document.createElement('div');
+            empty.className = 'empty-state';
+            empty.textContent = q
+                ? `Ничего не найдено по запросу «${q}»`
+                : 'У вас пока нет домашних заданий.';
+            homeworkList.appendChild(empty);
             return;
         }
 
-        sorted.forEach(hw => {
-            const hasFile     = hw.fileName && hw.fileData;
+        sorted.forEach((hw) => {
+            const hasFile = Boolean(hw.fileName && hw.downloadUrl);
             const deadlineTxt = hw.deadline ? `до ${hw.deadline}` : '';
 
             const card = document.createElement('div');
             card.className = 'one-homework';
             card.dataset.id = hw.id;
-            card.innerHTML = `
-                <div class="homework-info">
-                    <div class="homework-name">${hw.subject}</div>
-                    <div class="homework-text">${hw.text}</div>
-                    ${hasFile ? `<div class="hw-attached-file">📎 ${hw.fileName}</div>` : ''}
-                </div>
-                <div class="homework-meta">
-                    ${deadlineTxt ? `<span class="homework-deadline">${deadlineTxt}</span>` : ''}
-                    <div class="homework-buttons">
-                        ${hasFile ? `
-                        <button type="button" class="hw-btn hw-btn-download" title="Скачать прикреплённый файл">
-                            <img src="/media/download.svg" alt="download">
-                        </button>` : ''}
-                        <button type="button" class="hw-btn hw-btn-delete" title="Удалить задание">
-                            <img src="/media/delete.svg" alt="delete">
-                        </button>
-                    </div>
-                </div>
-            `;
+
+            const info = document.createElement('div');
+            info.className = 'homework-info';
+
+            const nameEl = document.createElement('div');
+            nameEl.className = 'homework-name';
+            nameEl.textContent = hw.subject;
+            info.appendChild(nameEl);
+
+            const textEl = document.createElement('div');
+            textEl.className = 'homework-text';
+            textEl.textContent = hw.text;
+            info.appendChild(textEl);
+
+            if (hasFile) {
+                const fileEl = document.createElement('div');
+                fileEl.className = 'hw-attached-file';
+                fileEl.textContent = `Файл: ${hw.fileName}`;
+                info.appendChild(fileEl);
+            }
+
+            const meta = document.createElement('div');
+            meta.className = 'homework-meta';
+
+            if (deadlineTxt) {
+                const dlEl = document.createElement('span');
+                dlEl.className = 'homework-deadline';
+                dlEl.textContent = deadlineTxt;
+                meta.appendChild(dlEl);
+            }
+
+            const buttons = document.createElement('div');
+            buttons.className = 'homework-buttons';
+
+            if (hasFile) {
+                const dlLink = document.createElement('a');
+                dlLink.href = hw.downloadUrl;
+                dlLink.className = 'hw-btn hw-btn-download';
+                dlLink.title = 'Скачать прикреплённый файл';
+                dlLink.innerHTML = '<img src="/media/download.svg" alt="download">';
+                buttons.appendChild(dlLink);
+            }
+
+            const delBtn = document.createElement('button');
+            delBtn.type = 'button';
+            delBtn.className = 'hw-btn hw-btn-delete';
+            delBtn.title = 'Удалить задание';
+            delBtn.innerHTML = '<img src="/media/delete.svg" alt="delete">';
+            buttons.appendChild(delBtn);
+
+            meta.appendChild(buttons);
+            card.appendChild(info);
+            card.appendChild(meta);
             homeworkList.appendChild(card);
         });
     }
 
-    // ========================================================
-    // КЛИКИ: удаление (с подтверждением) и скачивание файла
-    // ========================================================
-    homeworkList.addEventListener('click', function (event) {
-        // --- 1. Удаление с предупреждением ---
+    homeworkList.addEventListener('click', async function (event) {
         const deleteBtn = event.target.closest('.hw-btn-delete');
-        if (deleteBtn) {
-            const card = deleteBtn.closest('.one-homework');
-            if (!card) return;
-            const subjectName = card.querySelector('.homework-name')?.textContent || 'это задание';
+        if (!deleteBtn) return;
 
-            // Всплывающее предупреждение перед удалением:
-            const confirmed = confirm(`Вы уверены, что хотите удалить домашнее задание по предмету «${subjectName}»?`);
-            if (!confirmed) return;
+        const card = deleteBtn.closest('.one-homework');
+        if (!card) return;
+        const id = Number(card.dataset.id);
+        const hw = allHomeworks.find((h) => h.id === id);
+        if (!hw) return;
 
-            const id = Number(card.dataset.id);
-            let list = loadHomework().filter(hw => hw.id !== id);
-            saveHomework(list);
+        const confirmed = await confirmDelete({
+            title: 'Удалить задание?',
+            message: `Вы уверены, что хотите удалить домашнее задание по предмету «${hw.subject}»?`,
+        });
+        if (!confirmed) return;
+
+        try {
+            const res = await fetch(hw.deleteUrl, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json',
+                },
+            });
+            if (!res.ok) return;
+
+            allHomeworks = allHomeworks.filter((item) => item.id !== id);
             renderHomework();
-            return;
-        }
-
-        // --- 2. Скачивание прикреплённого файла ---
-        const downloadBtn = event.target.closest('.hw-btn-download');
-        if (downloadBtn) {
-            const card = downloadBtn.closest('.one-homework');
-            if (!card) return;
-            const id = Number(card.dataset.id);
-            const hw = loadHomework().find(h => h.id === id);
-            if (hw && hw.fileData && hw.fileName) {
-                const link = document.createElement('a');
-                link.href     = hw.fileData;
-                link.download = hw.fileName;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            }
+        } catch {
+            // ignore
         }
     });
 
-    // ========================================================
-    // ПЕРЕКЛЮЧЕНИЕ СОРТИРОВКИ
-    // ========================================================
-    sortBtns.forEach(btn => {
-        if (btn.dataset.sort === currentSort) {
-            btn.classList.add('active');
-        } else {
-            btn.classList.remove('active');
-        }
+    sortBtns.forEach((btn) => {
+        btn.classList.toggle('active', btn.dataset.sort === currentSort);
 
         btn.addEventListener('click', function () {
             currentSort = this.dataset.sort;
             localStorage.setItem(SORT_KEY, currentSort);
-
-            sortBtns.forEach(b => b.classList.remove('active'));
+            sortBtns.forEach((b) => b.classList.remove('active'));
             this.classList.add('active');
-
             renderHomework();
         });
     });
 
-    // ========================================================
-    // ПОИСК В РЕАЛЬНОМ ВРЕМЕНИ
-    // ========================================================
     if (searchInput) {
         searchInput.addEventListener('input', renderHomework);
     }
 
-    // ========================================================
-    // СТАРТ
-    // ========================================================
     renderHomework();
 });

@@ -1,10 +1,12 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ru">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StudentPlanner — Расписание на день</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>План на день – SP</title>
+    <link rel="icon" type="image/svg+xml" href="{{ asset('media/favicon.svg') }}">
     @vite(['resources/css/calendarOneDay.css', 'resources/js/calendarOneDay.js'])
 </head>
 
@@ -21,9 +23,7 @@
             <a href="/shedule">Расписание</a>
             <a href="/notes">Заметки</a>
             <a href="/privateFiels">Моё</a>
-            <a href="/profile">
-                <img src="{{ asset('media/Profile.svg') }}" alt="Профиль">
-            </a>
+            @include('partials.header-avatar')
         </nav>
     </header>
 
@@ -67,20 +67,7 @@
                                 <img src="{{ asset('media/ex.svg') }}" alt="homework">
                             </div>
 
-                            <div class="homework-tasks" id="hwList">
-                                <div class="homework-task">
-                                    <input type="checkbox" id="hw1">
-                                    <label for="hw1">Решить 2 уравнения</label>
-                                </div>
-                                <div class="homework-task">
-                                    <input type="checkbox" id="hw2">
-                                    <label for="hw2">Написать доклад (тема: экология)</label>
-                                </div>
-                                <div class="homework-task">
-                                    <input type="checkbox" id="hw3">
-                                    <label for="hw3">Доделать лабу</label>
-                                </div>
-                            </div>
+                            <div class="homework-tasks" id="hwList"></div>
                         </div>
 
                         <!-- Блок Заметки (с удобным полем ввода) -->
@@ -94,16 +81,7 @@
                                 <input type="text" id="dayNoteInput" placeholder="Добавить заметку...">
                             </div>
 
-                            <div class="notes-list" id="notesList">
-                                <div class="note-task">
-                                    <input type="checkbox" id="note1">
-                                    <label for="note1">Принести тетрадь по математике</label>
-                                </div>
-                                <div class="note-task">
-                                    <input type="checkbox" id="note2">
-                                    <label for="note2">Принести ручку</label>
-                                </div>
-                            </div>
+                            <div class="notes-list" id="notesList"></div>
                         </div>
                     </div>
                 </div>

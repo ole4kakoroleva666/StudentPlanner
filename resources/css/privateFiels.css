@@ -4,136 +4,43 @@ body {
     background-color: #F5F6FF;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* ==========================================
+   ОБЩАЯ ШИРИНА БЛОКОВ (КАК НА СТРАНИЦАХ ЗАДАЧ И ДЗ)
+   ========================================== */
+.upload-card,
+.files-subtitle,
+.main-private-fiels,
+.files-pagination {
+    max-width: 90rem;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-.title {
+/* ==========================================
+   БЛОК ЗАГРУЗКИ ФАЙЛА (КЛИК ПО ПАПКЕ)
+   ========================================== */
+.upload-card {
+    background-color: rgba(99, 106, 163, 0.06);
+    border-radius: 1.8rem;
+    padding: 2.2rem 2.6rem;
+    border: 0.2rem dashed #B7C0EB;
+    margin-bottom: 3.6rem;
     display: flex;
     align-items: center;
-    justify-content: center;
-    position: relative;
-    margin-bottom: 9.4rem;
+    justify-content: space-between;
+    gap: 1.6rem;
+    transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.18s ease;
 }
 
-.title>img {
-    width: 5.3rem;
-    height: 5.3rem;
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(50%);
+.upload-card:hover {
+    background-color: rgba(99, 106, 163, 0.1);
+    border-color: #636AA3;
 }
 
-.title>p {
-    font-size: 3.6rem;
-    font-family: 'JostSemiBold';
-    color: #3C3E4C;
-}
-
-.main-private-fiels {
-    max-width: 128rem;
-    margin: 0 auto;
-    padding: 0 2rem;
-}
-
-.file-row {
-    position: relative;
-    margin-bottom: 2rem;
-}
-
-.one-private-fiels {
-    display: flex;
-    align-items: center;
-    gap: 4rem;
-}
-
-.private-fiels-name {
-    font-family: "RobotoRegular";
-    font-size: 2rem;
-    color: #3C3E4C;
-    flex: 1;
-    min-width: 40rem;
-}
-
-.private-fiels-changes {
-    font-family: "RobotoRegular";
-    font-size: 2rem;
-    color: #3C3E4C;
-    flex: 1;
-    min-width: 40rem;
-    text-align: center;
-}
-
-.private-fiels-buttons {
-    display: flex;
-    gap: 2rem;
-    flex: 0 0 auto;
-    min-width: 12rem;
-    justify-content: flex-end;
-}
-
-.private-fiels-download,
-.private-fiels-delete {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0.5rem;
-    width: 3.5rem;
-    height: 3.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: opacity 0.2s ease;
-}
-
-.private-fiels-download:hover,
-.private-fiels-delete:hover {
-    opacity: 0.7;
-}
-
-.private-fiels-download img,
-.private-fiels-delete img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-}
-
-.private-fiels-line {
-    height: 0.1rem;
-    background-color: #3C3E4C;
-    width: 100%;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-}
-
-.upload-file {
-    margin-top: 21.6rem;
-    margin-bottom: 11.7rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    justify-content: flex-end;
-    padding: 0 2rem;
-}
-
-.upload-file-text {
-    font-family: "RobotoRegular";
-    font-size: 2rem;
-    color: #3C3E4C;
-}
-
-.upload-file-input {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.upload-file-input>img {
-    height: 3rem;
+.upload-card.is-dragover {
+    border-color: #636AA3;
+    background-color: rgba(99, 106, 163, 0.15);
+    transform: scale(1.01);
 }
 
 .file-input-hidden {
@@ -144,118 +51,344 @@ body {
     z-index: -1;
 }
 
-.upload-file-button {
-    font-family: "RobotoRegular";
+.upload-folder-trigger {
+    display: flex;
+    align-items: center;
+    gap: 1.8rem;
+    cursor: pointer;
+    flex: 1;
+    min-width: 0;
+    user-select: none;
+}
+
+.upload-folder-trigger.is-disabled {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.upload-folder-icon {
+    width: 5.4rem;
+    height: 5.4rem;
+    border-radius: 1.5rem;
+    background-color: #FFFFFF;
+    box-shadow: 0 6px 18px rgba(99, 106, 163, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background-color 0.2s ease, transform 0.18s ease, box-shadow 0.2s ease;
+}
+
+.upload-folder-icon img {
+    width: 2.8rem;
+    height: 2.8rem;
+    object-fit: contain;
+}
+
+.upload-folder-trigger:hover .upload-folder-icon {
+    background-color: #FFFFFF;
+    box-shadow: 0 8px 22px rgba(99, 106, 163, 0.25);
+    transform: translateY(-2px) scale(1.05);
+}
+
+.upload-folder-trigger:active .upload-folder-icon {
+    transform: translateY(0) scale(0.97);
+}
+
+.upload-folder-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    min-width: 0;
+}
+
+.upload-folder-title {
+    font-family: "RobotoMedium", sans-serif;
+    font-size: 1.9rem;
+    color: #3C3E4C;
+}
+
+.upload-folder-hint {
+    font-family: "RobotoRegular", sans-serif;
+    font-size: 1.4rem;
+    color: #7D8198;
+}
+
+.upload-file-status {
+    font-family: "RobotoMedium", sans-serif;
+    font-size: 1.4rem;
+    color: #636AA3;
+    flex-shrink: 0;
+    text-align: right;
+}
+
+.upload-file-status.is-error {
+    color: #E15B5B;
+}
+
+.upload-file-status.is-success {
+    color: #2E7D32;
+}
+
+/* ==========================================
+   СПИСОК ЛИЧНЫХ ФАЙЛОВ (КАРТОЧКИ)
+   ========================================== */
+.files-subtitle {
+    font-size: 2.2rem;
+    font-family: "JostSemiBold", sans-serif;
+    color: #3C3E4C;
+    margin-bottom: 1.6rem;
+}
+
+.main-private-fiels {
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+    margin-bottom: 4rem;
+}
+
+/* ==========================================
+   ПАГИНАЦИЯ
+   ========================================== */
+.files-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    margin-bottom: 10rem;
+    flex-wrap: wrap;
+}
+
+.page-btn {
+    min-width: 4.2rem;
+    height: 4.2rem;
+    padding: 0 1.2rem;
+    border-radius: 1.2rem;
+    background-color: #FFFFFF;
+    border: 0.1rem solid #E6E8F5;
+    box-shadow: 0 6px 18px rgba(99, 106, 163, 0.08);
+    font-family: "RobotoMedium", sans-serif;
     font-size: 1.6rem;
     color: #3C3E4C;
-    background-color: #FFF;
-    border: 0.1rem solid #3C3E4C;
-    border-radius: 0.5rem;
-    padding: 0.2rem 1.8rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.15s ease, border-color 0.2s ease;
+}
+
+a.page-btn:hover {
+    background-color: #EEF0FC;
+    border-color: #636AA3;
+    color: #636AA3;
+    transform: translateY(-1px);
+}
+
+.page-btn.is-active {
+    background-color: #636AA3;
+    border-color: #636AA3;
+    color: #FFFFFF;
+    box-shadow: 0 6px 18px rgba(99, 106, 163, 0.28);
+}
+
+.page-btn.is-disabled {
+    opacity: 0.45;
+    cursor: default;
+    box-shadow: none;
+}
+
+.page-dots {
+    font-family: "RobotoMedium", sans-serif;
+    font-size: 1.6rem;
+    color: #7D8198;
+    padding: 0 0.4rem;
+}
+
+.file-row {
+    background-color: #FFFFFF;
+    border-radius: 1.6rem;
+    padding: 1.6rem 2.2rem;
+    box-shadow: 0 10px 30px rgba(99, 106, 163, 0.08);
+    border: 0.1rem solid #F0F2FA;
+    transition: transform 0.18s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.file-row:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 36px rgba(99, 106, 163, 0.14);
+    border-color: #DFE3F6;
+}
+
+.one-private-fiels {
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+}
+
+.private-fiels-icon {
+    width: 4.4rem;
+    height: 4.4rem;
+    border-radius: 1.2rem;
+    background-color: #F0F2FA;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.private-fiels-icon img {
+    width: 2.2rem;
+    height: 2.2rem;
+    object-fit: contain;
+}
+
+.private-fiels-meta {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.private-fiels-name {
+    font-family: "RobotoMedium", sans-serif;
+    font-size: 1.8rem;
+    color: #3C3E4C;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.private-fiels-details {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-family: "RobotoRegular", sans-serif;
+    font-size: 1.4rem;
+    color: #7D8198;
+}
+
+.dot-sep {
+    opacity: 0.6;
+}
+
+.private-fiels-buttons {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    flex-shrink: 0;
+}
+
+.private-fiels-download,
+.private-fiels-delete {
+    background: transparent;
+    border: none;
     cursor: pointer;
-    transition: all 0.2s ease;
-    display: inline-block;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease, transform 0.15s ease;
 }
 
-.upload-file-button:hover {
-    background-color: #F0F0F0;
-    transform: translateY(-0.1rem);
+.private-fiels-download:hover {
+    background-color: #EEF0FC;
+    transform: translateY(-1px);
 }
 
-@media (max-width: 1280px) {
-    html {
-        font-size: 60%;
-    }
-
-    .main-private-fiels {
-        padding: 0 2rem;
-    }
+.private-fiels-delete:hover {
+    background-color: #FEECEC;
+    transform: translateY(-1px);
 }
 
-@media (max-width: 1024px) {
-    html {
-        font-size: 58%;
-    }
-
-    .one-private-fiels {
-        gap: 2rem;
-    }
-
-    .private-fiels-name,
-    .private-fiels-changes {
-        min-width: auto;
-    }
+.private-fiels-download img,
+.private-fiels-delete img {
+    width: 2.2rem;
+    height: 2.2rem;
+    object-fit: contain;
 }
 
+/* ==========================================
+   ПУСТОЕ СОСТОЯНИЕ
+   ========================================== */
+.files-empty-state {
+    background-color: #FFFFFF;
+    border-radius: 1.8rem;
+    padding: 5rem 2.4rem;
+    border: 0.15rem dashed #CFD3EB;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+}
+
+.files-empty-icon {
+    width: 4.4rem;
+    height: 4.4rem;
+    opacity: 0.55;
+    margin-bottom: 0.4rem;
+}
+
+.files-empty-state p {
+    font-family: "RobotoMedium", sans-serif;
+    font-size: 1.8rem;
+    color: #3C3E4C;
+}
+
+.files-empty-state span {
+    font-family: "RobotoRegular", sans-serif;
+    font-size: 1.4rem;
+    color: #7D8198;
+}
+
+/* ==========================================
+   АДАПТИВНОСТЬ
+   ========================================== */
 @media (max-width: 768px) {
-    html {
-        font-size: 56%;
-    }
-
-    .title {
-        margin-bottom: 6rem;
-    }
-
-    .title>img {
-        width: 4rem;
-        height: 4rem;
-    }
-
-    .one-private-fiels {
+    .upload-card {
+        flex-direction: column;
         align-items: flex-start;
-        gap: 19rem;
+        padding: 1.6rem 1.8rem;
     }
 
-    .private-fiels-name,
-    .private-fiels-changes {
+    .upload-file-status {
         text-align: left;
-        width: 100%;
     }
 
-    .private-fiels-buttons {
-        width: 100%;
-        justify-content: flex-start;
+    .file-row {
+        padding: 1.4rem 1.6rem;
     }
 
-    .upload-file {
-        margin-top: 10rem;
-        justify-content: center;
-        flex-wrap: wrap;
+    .private-fiels-icon {
+        width: 3.8rem;
+        height: 3.8rem;
+    }
+
+    .private-fiels-name {
+        font-size: 1.6rem;
     }
 }
 
 @media (max-width: 480px) {
-    html {
-        font-size: 54%;
+    .upload-folder-trigger {
+        gap: 1.2rem;
     }
 
-    .title>p {
-        font-size: 2.8rem;
-        text-align: center;
+    .upload-folder-icon {
+        width: 4.4rem;
+        height: 4.4rem;
     }
 
-    .one-private-fiels {
-        align-items: flex-start;
-        gap: 1.5rem;
+    .upload-folder-title {
+        font-size: 1.7rem;
     }
 
-    .private-fiels-name,
-    .private-fiels-changes {
-        text-align: left;
-        width: 100%;
-    }
-
-    .upload-file {
-        gap: 2rem;
-    }
-
-    .upload-file-text {
-        width: 100%;
-        text-align: center;
-    }
-
-    .upload-file-input {
-        justify-content: center;
-        width: 100%;
+    .private-fiels-download,
+    .private-fiels-delete {
+        width: 3.6rem;
+        height: 3.6rem;
     }
 }

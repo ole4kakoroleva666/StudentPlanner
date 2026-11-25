@@ -1,4 +1,4 @@
-﻿@import './base.css';
+@import './base.css';
 
 body {
     background-color: #F5F6FF;
@@ -30,8 +30,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 5rem;
-    height: 5rem;
+    width: 5.8rem;
+    height: 5.8rem;
     border-radius: 50%;
     transition: background-color 0.2s ease, transform 0.15s ease;
 }
@@ -53,8 +53,8 @@ body {
 
 .title > a > img,
 .title > img {
-    width: 4rem;
-    height: 4rem;
+    width: 5.3rem;
+    height: 5.3rem;
 }
 
 .week-mont {
@@ -331,6 +331,28 @@ body {
     font-family: "RobotoRegular", sans-serif;
     font-size: 1.6rem;
     color: #3C3E4C;
+}
+
+.note-task label {
+    flex: 1;
+    word-break: break-word;
+    cursor: pointer;
+}
+
+.day-note-delete {
+    background: none;
+    border: none;
+    color: #BEC4E3;
+    font-size: 2rem;
+    line-height: 1;
+    padding: 0 0.4rem;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: color 0.2s ease;
+}
+
+.day-note-delete:hover {
+    color: #EB5757;
 }
 
 .note-task:last-child {
@@ -779,4 +801,21 @@ body {
 
 #lessonsContainer::-webkit-scrollbar-thumb:hover {
     background: #636AA3;
+}
+
+
+@media (max-width: 768px) {
+    .shedule-calendarOneDay,
+    .homeworkblock,
+    .notesblock {
+        height: auto;
+        max-height: none;
+    }
+
+    .notes-list,
+    .homework-tasks {
+        max-height: none;
+        overflow-y: visible;
+        padding-right: 0;
+    }
 }
